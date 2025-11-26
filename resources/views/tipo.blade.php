@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modulo Historial</title>
+    <title>Modulo Tipo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -27,7 +27,7 @@
     <container class="container-sm d-flex justify-content-center mt-5">
         <div class="card">
             <div class="card-body" style="width: 1200px;">
-                <h3>Modulo Historial</h3>
+                <h3>Modulo Tipo</h3>
                 <hr>
                 {{-- Mensaje de éxito --}}
                     @if (session('success'))
@@ -57,7 +57,7 @@
                         </div>
                     @endif
 
-                <form name="historial_servicios" action="{{ url('/historial_servicios') }}" method="GET">
+                <form name="tipo" action="{{ url('/tipo') }}" method="GET">
                     <div class="text-end mb-3">
                         <button type="button" style="background-color:red;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AgregarModal"><i class="fa-solid fa-plus"></i> Nuevo</button>
                     </div>
@@ -65,13 +65,13 @@
                         <div class="col-md-6">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" name="search" value="{{ request ('search') }}" placeholder="Buscar por ID_historial o Fecha" aria-label="Username" aria-describedby="basic-addon1">
+                                <input type="text" class="form-control" name="search" value="{{ request ('search') }}" placeholder="Buscar por codigo o tipo" aria-label="Username" aria-describedby="basic-addon1">
                             </div>
                         </div>
 
                         <div class="col-md-6 text-end">
-                            <button type="submit" class="btn btn-success edit-btn" style="background-color:red;"><i class="fas fa-search-plus"></i> Buscar</button>
-                            <a href="{{ url('/historial_servicios') }}">
+                            <button type="submit" class="btn btn-success edit-btn" style="background-color:red"><i class="fas fa-search-plus"></i> Buscar</button>
+                            <a href="{{ url('/tipo') }}">
                                 <button type="button" class="btn btn-success edit-btn" style="background-color:#1c1c1cff"><i class="fas fa-list"></i> Reset</button>
                             </a>
                         </div>
@@ -83,41 +83,31 @@
                             <table class="table table-striped table-hover table-bordered ">
                                     <thead class="table-primary">
                                         <tr>
-                                        <th scope="col">Codigo del historial</th>
-                                        <th scope="col">Codigo del servicio</th>
-                                        <th scope="col">Fecha del historial</th>
-                                        <th scope="col">Descripcion del historial</th>
-                                         <th scope="col">Estado del historial</th>
+                                        <th scope="col">Codigo del Tipo de Documento</th>
+                                        <th scope="col">Nombre del Tipo de Documento</th>
                                         <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($datos as $item)
                                         <tr>
-                                            <td>{{$item->ID_Historial}}</td>
-                                            <td>{{$item->ID_Servicio}}</td>
-                                            <td>{{$item->Fecha_Evento}}</td>
-                                            <td>{{$item->Descripcion_Evento}}</td>
-                                            <td>{{$item->Estado}}</td>
+                                            <td>{{$item->Codigo_Documento}}</td>
+                                            <td>{{$item->Nombre_Documento}}</td>
                                             <td>
                                                 <button
                                                     type="button"
                                                     class="btn btn-success edit-btn"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#EditarModal"
-                                                    data-id="{{ $item->ID_Historial }}"
-                                                    data-idServ="{{ $item->ID_Servicio }}"
-                                                    data-fecha="{{ $item->Fecha_Evento }}"
-                                                    data-desc="{{ $item->Descripcion_Evento }}"
-                                                    data-etapa="{{ $item->Estado }}"
+                                                    data-id="{{ $item->Codigo_Documento }}"
+                                                    data-desc="{{ $item->Nombre_Documento }}"
                                                     style="background-color:red;">
-
                                                     <i class="fa-solid fa-pen-to-square"></i> Editar
                                                 </button>
-                                                <form action="{{ route('historial.destroy', $item->ID_Historial) }}" method="POST" style="display:inline;">
+                                                <form action="{{ route('tipo.destroy', $item->Codigo_Documento) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button style="background-color:#1c1c1cff;" type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar este historial?')">
+                                                    <button style="background-color:#1c1c1cff;" type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar este Tipo de Documento?')">
                                                         <i class="fa-solid fa-trash"></i> Eliminar
                                                     </button>
                                                 </form>
@@ -167,9 +157,9 @@
                 <div class="alert alert-info text-center mt-3">
                     <i class="fas fa-info-circle"></i>
                     @if(request('search'))
-                        No se encontraron historiales con ese tipo de dato "{{ request('search') }}"
+                        No se encontraron tipo con ese tipo de dato "{{ request('search') }}"
                     @else
-                        No hay historiales registrados.
+                        No hay tipo registrados.
                     @endif
                 </div>
                 @endif
@@ -180,19 +170,19 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-user"></i> Crear Historial</h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-user"></i> Crear tipo</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('historial.store') }}" name="historial" method="POST">
+                    <form action="{{ route('tipo.store') }}" name="tipo" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="ID_Historial" class="form-label">Codigo</label>
-                        <input type="number" class="form-control" id="ID_Historial" name="ID_Historial" placeholder="Digite el Codigo del historial" required>
+                        <label for="Codigo_Documento" class="form-label">Codigo</label>
+                        <input type="number" class="form-control" id="Codigo_Documento" name="Codigo_Documento" placeholder="Digite el Codigo del tipo" required>
                     </div>
                     <div class="mb-3">
-                        <label for="Fecha_Evento" class="form-label">Fecha del historial</label>
-                        <input type="text" class="form-control" id="Fecha_Evento" name="Fecha_Evento" placeholder="Digite la fecha del historial" required>
+                        <label for="Nombre_Documento" class="form-label">Nombre del Tipo de Documento</label>
+                        <input type="text" class="form-control" id="Nombre_Documento" name="Nombre_Documento" placeholder="Digite el Nombre del tipo" required>
                     </div>
                      <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color:#1c1c1cff;"><i class="fa-solid fa-right-from-bracket"></i> Cerrar</button>
@@ -211,7 +201,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="EditarModalLabel"><i class="fa-solid fa-user-pen"></i> Editar Historial</h5>
+                        <h5 class="modal-title" id="EditarModalLabel"><i class="fa-solid fa-user-pen"></i> Editar tipo</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -219,11 +209,11 @@
                             @csrf
                             @method('PUT') <!-- Muy importante -->
                              <div class="mb-3">
-                                <label for="ID_Historial" class="form-label">Codigo</label>
-                               <input type="text" class="form-control" id="editID_Historial" name="ID_Historial"  readonly>
+                                <label for="Codigo_Documento" class="form-label">Codigo</label>
+                               <input type="text" class="form-control" id="editCodigo_Documento" name="Codigo_Documento"  readonly>
                     <div class="mb-3">
-                        <label for="editFecha_Evento" class="form-label">Fecha del historial</label>
-                        <input type="text" class="form-control" id="editFecha_Evento" name="Fecha_Evento" placeholder="Digite la fecha del historial" required>
+                        <label for="editNombre_Documento" class="form-label">Descripcion del Rol</label>
+                        <input type="text" class="form-control" id="editNombre_Documento" name="Nombre_Documento" placeholder="Digite el Nombre del tipo" required>
                     </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color:#1c1c1cff;"><i class="fa-solid fa-right-from-bracket"></i> Cerrar</button>
@@ -249,25 +239,18 @@ editarModal.addEventListener('show.bs.modal', function (event) {
     var button = event.relatedTarget;
 
     var id = button.getAttribute('data-id'); // Documento del cliente
-    var idServ = button.getAttribute('data-idServ');
-    var fecha = button.getAttribute('data-fecha');
     var desc = button.getAttribute('data-desc');
-    var estado = button.getAttribute('data-estado');
 
     // Llenar modal
-    document.getElementById('editID_Historial').value = id;
-    document.getElementById('editID_Servicio').value = idServ;
-    document.getElementById('editFecha_Evento').value = fecha;
-    document.getElementById('editDescripcion_Evento').value = desc;
-    document.getElementById('editEtapa').value = estado;
+    document.getElementById('editCodigo_Documento').value = id;
+    document.getElementById('editNombre_Documento').value = desc;
 
     // Cambiar acción del formulario
     var form = document.getElementById('editForm');
-    form.action = '/historial_servicios/' + id;
+    form.action = '/tipo/' + id;
 });
 
 </script>
-
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="background-color:#1c1c1cff">
   <div class="offcanvas-header">
@@ -292,3 +275,4 @@ editarModal.addEventListener('show.bs.modal', function (event) {
         </div>
   </div>
 </div> 
+

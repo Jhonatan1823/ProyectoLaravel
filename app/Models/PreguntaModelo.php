@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-class ProductoModelo extends Model
+class PreguntaModelo extends Model
 {
-    protected $table = 'producto';
+    protected $table = 'pregunta';
 
-    protected $primaryKey = 'Codigo_Producto';
+    protected $primaryKey = 'ID_Consulta';
 
     public $incrementing = false;
 
@@ -20,14 +20,12 @@ class ProductoModelo extends Model
 
     protected $fillable = [
         'Codigo_Producto',
-        'Cantidad',
-        'Precio',
-        'Nombre',
-        'Descripcion',
-        'Imagen',
-        'Activo_Catalogo',
-        'ID_Categoria',
+        'ID_Consulta',
+        'ID_Usuario',
+        'Pregunta',
+        'Fecha',
         
     ];
 }
+
 

@@ -112,6 +112,26 @@ Route::put('/tipo/{documento}', [TipoController::class, 'update'])->name('tipo.u
 Route::delete('/tipo/{id}', [TipoController::class, 'destroy'])->name('tipo.destroy');
 
 
+// Rutas de Recurso para los módulos principales
+// Módulo de Catálogo
+Route::resource('producto', ProductoController::class);
+Route::resource('categoria', CategoriaController::class);
 
+// Módulo de Interacción
+Route::resource('pregunta', PreguntaController::class);
+Route::resource('comentarios', ComentariosController::class);
 
+// Módulo de Servicios
+Route::resource('servicio', ServicioController::class);
+Route::resource('historial', HistorialController::class);
+
+// Módulo de Comunicación
+Route::resource('chat', ChatController::class);
+Route::resource('mensajes', MensajesController::class);
+Route::resource('notificaciones', NotificacionesController::class);
+
+// Módulo de Gestión de Base
+Route::resource('usuario', UsuarioController::class);
+Route::resource('roles', RolesController::class);
+Route::resource('documento', TipoController::class)->names('documento'); 
 

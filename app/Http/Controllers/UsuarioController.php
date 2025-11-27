@@ -83,4 +83,18 @@ public function destroy($id)
 
     return redirect()->route('usuario.index')->with('success', 'Usuario eliminado correctamente');
 }
+    
+public function distroy($codigoUsuario)
+    {
+        try{
+            $usuario = RolesModelo::findOrFail($codigoUsuario);
+            $usuario->delete();
+        }
+        catch (\Exception $e) {
+            if($e->getCode()=='23000'){
+                return redirect()->route(usuario.index)->with('error','No se puede eliminar el Usuario que esta asociado a otra tabla.');
+            }
+            return redirect()->route('usuario.index')->with('success','Usuario eliminado Exitosamente.');
+        }
+    }
 }

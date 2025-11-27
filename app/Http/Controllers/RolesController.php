@@ -61,5 +61,19 @@ public function destroy($idocumento)
 
     return redirect()->route('roles.index')->with('success', 'El rol ha sido eliminado correctamente');
 }
+
+public function distroy($codigoRoles)
+    {
+        try{
+            $roles = RolesModelo::findOrFail($codigoRoles);
+            $roles->delete();
+        }
+        catch (\Exception $e) {
+            if($e->getCode()=='23000'){
+                return redirect()->route(roles.index)->with('error','No se puede eliminar el Rol que esta asociado a otra cuenta.');
+            }
+            return redirect()->route('roles.index')->with('success','Rol eliminado Exitosamente.');
+        }
+    }
 }
 

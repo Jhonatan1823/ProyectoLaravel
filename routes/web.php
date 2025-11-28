@@ -13,6 +13,8 @@ use App\Http\Controllers\PreguntaController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\TipoController;
 use App\Http\Controllers\MensajesController;
+use App\Http\Middleware\checKAuth;
+use App\Http\Controllers\AuntenticarController;
 
 
 
@@ -31,23 +33,26 @@ use App\Models\MensajesModelo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
+Route::middleware([checKAuth::class])->group(function () {
+
 Route::get('/', function () {
-    return view('welcome');
-});
+return view('welcome');
+   });
 
 Route::get('/index', function(){return view('index');})->name("index");
 
 Route::get('/protochat', function(){return view('protochat');})->name("protochat");
 
-Route::get('/usuario',[UsuarioController::class,"index"])->name("usuario.index");
+Route::get('/usuario',[UsuarioController::class,"index"])->name("usuario.index");   
 Route::post('/usuario',[UsuarioController::class,"store"])->name("usuario.store");
 Route::get('/usuario/{documento}/edit', [UsuarioController::class, 'edit'])->name('usuario.edit');
 Route::put('/usuario/{documento}', [UsuarioController::class, 'update'])->name('usuario.update');
 Route::delete('/usuario/{id}', [UsuarioController::class, 'destroy'])->name('usuario.destroy');
 
 Route::get('/producto',[ProductoController::class,"index"])->name("producto.index");
-Route::post('/producto',[ProductoController::class,"store"])->name("producto.store");
-Route::get('/producto/{documento}/edit', [ProductoController::class, 'edit'])->name('producto.edit');
+Route::post('/producto',[ProductoController::class,"store"])->name("producto.store");   
+Route::get('/producto/{documento}/edit', [ProductoController::class, 'edit'])->name('producto.edit');  
 Route::put('/producto/{documento}', [ProductoController::class, 'update'])->name('producto.update');
 Route::delete('/producto/{id}', [ProductoController::class, 'destroy'])->name('producto.destroy');
 
@@ -59,7 +64,6 @@ Route::delete('/comentarios/{id}', [ComentarioController::class, 'destroy'])->na
 
 Route::get('/servicio',[ServicioController::class,"index"])->name("servicio.index");
 Route::post('/servicio',[ServicioController::class,"store"])->name("servicio.store");
-Route::get('/servicio/{documento}/edit', [ServicioController::class, 'edit'])->name('servicio.edit');
 Route::put('/servicio/{documento}', [ServicioController::class, 'update'])->name('servicio.update');
 Route::delete('/servicio/{id}', [ServicioController::class, 'destroy'])->name('servicio.destroy');
 
@@ -69,7 +73,7 @@ Route::get('/notificaciones/{documento}/edit', [NotificacionesController::class,
 Route::put('/notificaciones/{documento}', [NotificacionesController::class, 'update'])->name('notificaciones.update');
 Route::delete('/notificaciones/{id}', [NotificacionesController::class, 'destroy'])->name('notificaciones.destroy');
 
-Route::get('/historial',[HistorialController::class,"index"])->name("historial.index");
+Route::get('/historial',[HistorialController::class,"index"])->name("historial.index"); 
 Route::post('/historial',[HistorialController::class,"store"])->name("historial.store");
 Route::get('/historial/{documento}/edit', [HistorialController::class, 'edit'])->name('historial.edit');
 Route::put('/historial/{documento}', [HistorialController::class, 'update'])->name('historial.update');
@@ -111,7 +115,6 @@ Route::get('/tipo/{documento}/edit', [TipoController::class, 'edit'])->name('tip
 Route::put('/tipo/{documento}', [TipoController::class, 'update'])->name('tipo.update');
 Route::delete('/tipo/{id}', [TipoController::class, 'destroy'])->name('tipo.destroy');
 
-
 // Rutas de Recurso para los módulos principales
 // Módulo de Catálogo
 Route::resource('producto', ProductoController::class);
@@ -134,4 +137,12 @@ Route::resource('notificaciones', NotificacionesController::class);
 Route::resource('usuario', UsuarioController::class);
 Route::resource('roles', RolesController::class);
 Route::resource('documento', TipoController::class)->names('documento'); 
+
+});
+
+
+//Rotas inicio sesion y cierre 
+Route::get('/iniciosesion',[AuntenticarController::class, 'showlogin'])->name('iniciosesion');
+Route::post('/iniciosesion', [AuntenticarController::class, 'authenticate'])->name('iniciosesion.post');
+Route::post('/cerarsesion', [AuntenticarController::class, 'logout'])->name('logout');
 

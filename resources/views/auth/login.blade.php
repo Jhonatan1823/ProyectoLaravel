@@ -55,6 +55,7 @@
       border-radius: 5px;
       cursor: pointer;
       text-decoration: none;
+     border-radius: 8000px;
       display: inline-block;
     }
     

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\UsuarioModelo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
@@ -35,13 +36,26 @@ class UsuarioController extends Controller
             'Direccion' => 'required',
             'Telefono' => 'required|numeric',
             'Correo' => 'required|email',
-            'Contraseña' => 'required',
+            'Contraseña' => 'required|max:200',
             'Codigo_Rol' => 'required|numeric'
         ],[
             'ID_Usuario.unique' => 'El usuario con este documento ya existe en la plataforma.',
         ]);
 
-        UsuarioModelo::create($request->all());
+        UsuarioModelo::create([
+            'ID_Usuario' => $request->ID_Usuario,
+            'Codigo_Documento' => $request->Codigo_Documento,
+            'Nombre' => $request->Nombre,
+            'Fecha_Nacimiento' => $request->Fecha_Nacimiento,
+            'Direccion' => $request->Direccion,
+            'Telefono' => $request->Telefono,
+            'Correo' => $request->Correo,
+            'Contraseña' =>Hash::make($request->Contraseña),
+            'Codigo_Rol' => $request->Codigo_Rol
+
+        ]);
+       
+       
         return redirect()->route('usuario.index')->with('success','Usuario Registrado en la Plataforma');
     }
 
@@ -53,9 +67,9 @@ class UsuarioController extends Controller
             'Nombre' => 'required',
             'Fecha_Nacimiento' => 'required',
             'Direccion' => 'required',
-            'Telefono' => 'required|numeric',
+            'Telefono' => 'required|numeric|max:20',
             'Correo' => 'required|email',
-            'Contraseña' => 'required',
+            'Contraseña' => 'required|max:200',
             'Codigo_Rol' => 'required|numeric'
         ],[
             'ID_Usuario.unique' => 'El usuario con este documento ya existe en la plataforma.',
@@ -77,22 +91,14 @@ class UsuarioController extends Controller
     }
     // Eliminar
 public function destroy($id)
-{
-    $usuario = UsuarioModelo::findOrFail($id);
-    $usuario->delete();
-
-    return redirect()->route('usuario.index')->with('success', 'Usuario eliminado correctamente');
-}
-    
-public function distroy($codigoUsuario)
     {
         try{
-            $usuario = RolesModelo::findOrFail($codigoUsuario);
+            $usuario = UsuarioModelo::findOrFail($id);
             $usuario->delete();
         }
         catch (\Exception $e) {
             if($e->getCode()=='23000'){
-                return redirect()->route(usuario.index)->with('error','No se puede eliminar el Usuario que esta asociado a otra tabla.');
+                return redirect()->route('usuario.index')->with('error','No se puede eliminar el Usuario que esta asociado a otra tabla.');
             }
             return redirect()->route('usuario.index')->with('success','Usuario eliminado Exitosamente.');
         }

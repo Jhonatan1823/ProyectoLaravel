@@ -74,4 +74,3 @@ public function destroy($id)
     return redirect()->route('pregunta.index')->with('success', 'La Pregunta ha sido eliminada correctamente');
 }
 }
-

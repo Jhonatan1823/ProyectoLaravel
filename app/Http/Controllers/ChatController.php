@@ -65,5 +65,3 @@ public function destroy($idocumento)
     return redirect()->route('chat.index')->with('success', 'sala de chat eliminada correctamente');
 }
 }
-
-

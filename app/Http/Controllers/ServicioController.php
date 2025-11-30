@@ -80,5 +80,3 @@ public function destroy($idocumento)
     return redirect()->route('servicio.index')->with('success', 'Servicio eliminado correctamente');
 }
 }
-
-

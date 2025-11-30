@@ -13,6 +13,8 @@ use App\Http\Controllers\PreguntaController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\TipoController;
 use App\Http\Controllers\MensajesController;
+use App\Http\Controllers\AutenticarController;
+use App\Http\Middleware\ChecKAuth;
 
 
 
@@ -31,19 +33,22 @@ use App\Models\MensajesModelo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::middleware([ChecKAuth::class])->group(function() {
+
+
 
 Route::get('/index', function(){return view('index');})->name("index");
 
 Route::get('/protochat', function(){return view('protochat');})->name("protochat");
+
 
 Route::get('/usuario',[UsuarioController::class,"index"])->name("usuario.index");
 Route::post('/usuario',[UsuarioController::class,"store"])->name("usuario.store");
 Route::get('/usuario/{documento}/edit', [UsuarioController::class, 'edit'])->name('usuario.edit');
 Route::put('/usuario/{documento}', [UsuarioController::class, 'update'])->name('usuario.update');
 Route::delete('/usuario/{id}', [UsuarioController::class, 'destroy'])->name('usuario.destroy');
+
+
 
 Route::get('/producto',[ProductoController::class,"index"])->name("producto.index");
 Route::post('/producto',[ProductoController::class,"store"])->name("producto.store");
@@ -131,7 +136,18 @@ Route::resource('mensajes', MensajesController::class);
 Route::resource('notificaciones', NotificacionesController::class);
 
 // Módulo de Gestión de Base
-Route::resource('usuario', UsuarioController::class);
+
 Route::resource('roles', RolesController::class);
-Route::resource('documento', TipoController::class)->names('documento'); 
+Route::resource('documento', TipoController::class)->names('documento');
+Route::resource('usuario', UsuarioController::class);
+});
+
+
+Route::get('/inciosesion',[AutenticarController::class, 'showlogin'])->name('iniciosesion');
+Route::post('/inciosesion',[AutenticarController::class, 'authenticate'])->name('iniciosesion.post');
+Route::post('/iniciosesion',[AutenticarController::class, 'logout'])->name('logout');
+
+Route::get('/', function () {
+    return view('welcome');
+});
 

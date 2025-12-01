@@ -8,11 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <body style="background-color: #ffffffff;">
-
-<!--Barra de navegacion de arriba-->
+   <!--Barra de navegacion de arriba-->
 <nav class="navbar navbar-expand-lg" style="background-color: #d20000ff;">
   <div class="container-fluid">
-    <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" style="outline: none; box-shadow: none; border-color: transparent; background-color: #1c1c1cff">
+    <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" style="outline: none; box-shadow: none; border-color: transparent;background-color: #1c1c1cff">
       <i class="fa-solid fa-bars"></i>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,72 +19,16 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <h1 style="color: white;">Celuaccel</h1>
-      </div>
-      <div class="ms-auto">
-    @if(session()->has('user'))
-        <form method="POST" action="{{ route('logout') }}">
-        @csrf
-             <button type="submit" class="btn btn-danger">
-                <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
-           </button>
-        </form>
-    @endif
+        <a href="{{ route('index') }}" style="text-decoration: none;font-size:35px;color: white;">Celuaccel</a>
       </div>
     </div>
   </div>
 </nav>
-
-<br>
-<br>
-<br>
-<br>
 <center>
-<div class="card" style="width:400px">
-  <h4 class="card-header"style="background-color:red;color:white;">Celuaccel</h4>
-  <div class="card-body">
-    <h5 class="card-title">Iniciar Sesion</h5>
-    
-    @if($errors->any())
-      <div class="alert alert-danger">
-        <ul class="mb-0">
-            @foreach($errors->all() as $e)
-              <li>{{ $e }}</li>
-            @endforeach
-        </ul>
-      </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-    <form method="POST" action="{{ route('iniciosesion.post') }}">
-        @csrf
-        <label class="form-label">Tipo de Documento</label>
-        <select type="number" class="form-select" aria-label="Default select example"  id="Codigo_Documento" name="Codigo_Documento" required>
-            <option selected style="color:rgb(100,100,100)">[Seleccione un Documento]</option>
-            <option value="2">Cedula de Ciudadania</option>
-            <option value="1">Tarjeta de Identidad</option>
-            <option value="3">Cedula de Extranjeria</option>
-            <option value="4">Pasaporte</option>
-            <option value="5">PEP</option>
-        </select>
-        <p class="card-text">Numero de Documento</p>
-        <div class="input-group flex-nowrap">
-            <span class="input-group-text" id="addon-wrapping">#</span>
-            <input type="text" class="form-control" placeholder="Documento" aria-label="Documento" aria-describedby="addon-wrapping" id="ID_Usuario" name="ID_Usuario" required>
-        </div>
-        <p class="card-text">Contraseña</p>
-        <div class="input-group flex-nowrap">
-            <span class="input-group-text">***</span>
-            <input type="password" class="form-control" placeholder="Contraseña" aria-label="Contraseña" aria-describedby="addon-wrapping" id="Contraseña" name="Contraseña" required>
-        </div>
-        <br>
-        <button type="submit" class="btn btn-danger">Enviar</button>
-    </form>
-       
-  </div>
+  <h1>Catalogo de Productos</h1>
+  <h6>Conoce los últimos accesorios que ofrecemos.</h6>
+<div  class="card"  style="width:200px">
+  <img>[Archivo]</img>
 </div>
 </center>
 </body>
@@ -108,7 +51,7 @@
 @php
 $rol = session('user.Codigo_Rol');
 @endphp
-            @if($rol == 2)
+@if($rol == 2)
                 {{-- MÓDULO 1: CATÁLOGO --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingOne">
@@ -123,9 +66,9 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif
+@endif
 
-            @if($rol == 2)
+@if($rol == 2)
                 {{-- MÓDULO 2: INTERACCIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingTwo">
@@ -140,9 +83,9 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif
+@endif
 
-            @if($rol == 3)
+@if($rol == 3)
                 {{-- MÓDULO 3: SERVICIOS --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingThree">
@@ -157,9 +100,9 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif
+@endif
 
-            @if($rol == 2)
+@if($rol == 2)
                 {{-- MÓDULO 4: COMUNICACIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFour">
@@ -175,9 +118,9 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif
+@endif
 
-            @if($rol == 1)
+@if($rol == 1)
                 {{-- MÓDULO 5: GESTIÓN BASE (Usuarios y Roles) --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFive">
@@ -193,9 +136,8 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif 
+@endif               
             </div>
         </div>
 </div> 
-
 

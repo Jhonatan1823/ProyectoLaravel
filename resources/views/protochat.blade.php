@@ -4,9 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modulo Inicio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        /* Estilos del proto chat */
+        .chat-box {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .chat-message {
+            margin-bottom: 10px;
+        }
+        .chat-message.user {
+            text-align: right;
+            color: #0d6efd;
+        }
+        .chat-message.bot {
+            text-align: left;
+            color: #198754;
+        }
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+        .chat-input input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+        }
+        .chat-input button {
+            border: none;
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px 15px;
+        }
+    </style>
+</head>
 <body style="background-color: #ffffffff;">
 
 <!--Barra de navegacion de arriba-->
@@ -23,74 +69,60 @@
         <h1 style="color: white;">Celuaccel</h1>
       </div>
       <div class="ms-auto">
-    @if(session()->has('user'))
         <form method="POST" action="{{ route('logout') }}">
-        @csrf
-             <button type="submit" class="btn btn-danger">
-                <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
-           </button>
+          @csrf
+          <button type="submit" class="btn btn-light" style="color:red">
+            Cerrar sesión
+          </button>
         </form>
-    @endif
       </div>
     </div>
   </div>
 </nav>
 
-<br>
-<br>
-<br>
-<br>
 <center>
-<div class="card" style="width:400px">
-  <h4 class="card-header"style="background-color:red;color:white;">Celuaccel</h4>
-  <div class="card-body">
-    <h5 class="card-title">Iniciar Sesion</h5>
-    
-    @if($errors->any())
-      <div class="alert alert-danger">
-        <ul class="mb-0">
-            @foreach($errors->all() as $e)
-              <li>{{ $e }}</li>
-            @endforeach
-        </ul>
+  <!-- Proto Chat -->
+  <div class="chat-box mt-4">
+      <div class="chat-messages" id="chatMessages">
+          <div class="chat-message bot">Hola 👋, ¿en qué puedo ayudarte?</div>
       </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-    <form method="POST" action="{{ route('iniciosesion.post') }}">
-        @csrf
-        <label class="form-label">Tipo de Documento</label>
-        <select type="number" class="form-select" aria-label="Default select example"  id="Codigo_Documento" name="Codigo_Documento" required>
-            <option selected style="color:rgb(100,100,100)">[Seleccione un Documento]</option>
-            <option value="2">Cedula de Ciudadania</option>
-            <option value="1">Tarjeta de Identidad</option>
-            <option value="3">Cedula de Extranjeria</option>
-            <option value="4">Pasaporte</option>
-            <option value="5">PEP</option>
-        </select>
-        <p class="card-text">Numero de Documento</p>
-        <div class="input-group flex-nowrap">
-            <span class="input-group-text" id="addon-wrapping">#</span>
-            <input type="text" class="form-control" placeholder="Documento" aria-label="Documento" aria-describedby="addon-wrapping" id="ID_Usuario" name="ID_Usuario" required>
-        </div>
-        <p class="card-text">Contraseña</p>
-        <div class="input-group flex-nowrap">
-            <span class="input-group-text">***</span>
-            <input type="password" class="form-control" placeholder="Contraseña" aria-label="Contraseña" aria-describedby="addon-wrapping" id="Contraseña" name="Contraseña" required>
-        </div>
-        <br>
-        <button type="submit" class="btn btn-danger">Enviar</button>
-    </form>
-       
+      <div class="chat-input">
+          <input type="text" id="chatInput" placeholder="Escribe un mensaje...">
+          <button onclick="sendMessage()">Enviar</button>
+      </div>
   </div>
-</div>
 </center>
+
+<script>
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const messages = document.getElementById('chatMessages');
+        const text = input.value.trim();
+
+        if(text !== "") {
+            // Mensaje del usuario
+            const userMsg = document.createElement('div');
+            userMsg.classList.add('chat-message', 'user');
+            userMsg.textContent = text;
+            messages.appendChild(userMsg);
+
+            // Respuesta simulada del bot
+            const botMsg = document.createElement('div');
+            botMsg.classList.add('chat-message', 'bot');
+            botMsg.textContent = "Recibí tu mensaje: " + text;
+            messages.appendChild(botMsg);
+
+            // Scroll automático
+            messages.scrollTop = messages.scrollHeight;
+
+            // Limpiar input
+            input.value = "";
+        }
+    }
+</script>
+
 </body>
 </html>
-
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="background-color:#1c1c1cff">
   <div class="offcanvas-header">
@@ -103,11 +135,11 @@
         <div class="container mt-5">
 <div class="sidebar">
         <div class="p-3">
-            <h5 class="text-white mb-3">Módulos</h5>
+            <h5 class="text-white mb-3">Módulos DB</h5>
             <div class="accordion accordion-flush" id="dbAccordion">
-@php
-$rol = session('user.Codigo_Rol');
-@endphp
+        @php
+         $rol = session('user.Codigo_Rol');
+       @endphp
             @if($rol == 2)
                 {{-- MÓDULO 1: CATÁLOGO --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
@@ -193,7 +225,7 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif 
+            @endif               
             </div>
         </div>
 </div> 

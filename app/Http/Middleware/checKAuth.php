@@ -27,3 +27,4 @@ class ChecKAuth
         return $next($request);
     }
 }
+

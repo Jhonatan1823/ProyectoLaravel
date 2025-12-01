@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <body>
 
- <!--Barra de navegacion de arriba-->
+<!--Barra de navegacion de arriba-->
 <nav class="navbar navbar-expand-lg" style="background-color: #d20000ff;">
   <div class="container-fluid">
-    <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" style="outline: none; box-shadow: none; border-color: transparent;background-color: #1c1c1cff">
+    <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" style="outline: none; box-shadow: none; border-color: transparent; background-color: #1c1c1cff">
       <i class="fa-solid fa-bars"></i>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,22 +22,44 @@
       <div class="navbar-nav">
         <h1 style="color: white;">Celuaccel</h1>
       </div>
+      <div class="ms-auto">
+@if(!session()->has('user'))
+    <a href="{{ route('iniciosesion') }}" class="btn btn-primary">
+        Iniciar sesión
+    </a>
+@endif
+@if(session()->has('user'))
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+        </button>
+    </form>
+@endif
+      </div>
     </div>
   </div>
 </nav>
 
+</body>
+</html>
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="background-color:#1c1c1cff">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" style="color:white;" id="offcanvasExampleLabel">Menú</h5>
+
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
+
+</div>
   <div class="offcanvas-body">
         <div class="container mt-5">
 <div class="sidebar">
         <div class="p-3">
-            <h5 class="text-white mb-3">Módulos DB</h5>
+            <h5 class="text-white mb-3">Inicia Sesion Para Navegar por el Sistema</h5>
             <div class="accordion accordion-flush" id="dbAccordion">
-
+@php
+$rol = session('user.Codigo_Rol');
+@endphp
+@if($rol == 2)
                 {{-- MÓDULO 1: CATÁLOGO --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingOne">
@@ -52,7 +74,9 @@
                         </div>
                     </div>
                 </div>
+@endif
 
+@if($rol == 2)
                 {{-- MÓDULO 2: INTERACCIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingTwo">
@@ -67,7 +91,9 @@
                         </div>
                     </div>
                 </div>
+@endif
 
+@if($rol == 3)
                 {{-- MÓDULO 3: SERVICIOS --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingThree">
@@ -78,11 +104,14 @@
                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#dbAccordion">
                         <div class="list-group list-group-flush">
                             <a href="{{ route('servicio.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-tools me-2"></i> Servicios Activos</a>
+                            <a href="{{ route('adminservicio') }}" class="list-group-item list-group-item-action"><i class="fas fa-tools me-2"></i> Simulacion Servicios (Vista de Tecnicos)</a>
                             <a href="{{ route('historial.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-history me-2"></i> Historial</a>
                         </div>
                     </div>
                 </div>
+@endif
 
+@if($rol == 2)
                 {{-- MÓDULO 4: COMUNICACIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFour">
@@ -93,12 +122,15 @@
                     <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#dbAccordion">
                         <div class="list-group list-group-flush">
                             <a href="{{ route('chat.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Chat</a>
+                            <a href="{{ route('protochat') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Simulación Chat</a>
                             <a href="{{ route('mensajes.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-paper-plane me-2"></i> Mensajes</a>
                             <a href="{{ route('notificaciones.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i> Notificaciones</a>
                         </div>
                     </div>
                 </div>
+@endif
 
+@if($rol == 1)
                 {{-- MÓDULO 5: GESTIÓN BASE (Usuarios y Roles) --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFive">
@@ -114,25 +146,12 @@
                         </div>
                     </div>
                 </div>
-                
+@endif               
             </div>
         </div>
-    </div>
-        </div>
-        <div>
-          <p>
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
-                    Toggle width collapse
-                </button>
-                </p>
-            <div style="min-height: 120px;">
-            <div class="collapse collapse-horizontal" id="collapseWidthExample">
-                <div class="card card-body" style="width: 300px;">
-                This is some placeholder content for a horizontal collapse. It’s hidden by default and shown when triggered.
-                </div>
-            </div>
-            </div>
-        </div>
-  </div>
 </div> 
    
+
+
+
+

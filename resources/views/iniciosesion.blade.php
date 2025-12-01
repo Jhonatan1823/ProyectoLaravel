@@ -23,14 +23,14 @@
         <h1 style="color: white;">Celuaccel</h1>
       </div>
       <div class="ms-auto">
-    @if(session()->has('user'))
-        <form method="POST" action="{{ route('logout') }}">
+@if(session()->has('user'))
+    <form method="POST" action="{{ route('logout') }}">
         @csrf
-             <button type="submit" class="btn btn-danger">
-                <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
-           </button>
-        </form>
-    @endif
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+        </button>
+    </form>
+@endif
       </div>
     </div>
   </div>
@@ -108,7 +108,7 @@
 @php
 $rol = session('user.Codigo_Rol');
 @endphp
-            @if($rol == 2)
+@if($rol == 2)
                 {{-- MÓDULO 1: CATÁLOGO --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingOne">
@@ -123,9 +123,9 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif
+@endif
 
-            @if($rol == 2)
+@if($rol == 2)
                 {{-- MÓDULO 2: INTERACCIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingTwo">
@@ -140,9 +140,9 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif
+@endif
 
-            @if($rol == 3)
+@if($rol == 3)
                 {{-- MÓDULO 3: SERVICIOS --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingThree">
@@ -157,9 +157,9 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif
+@endif
 
-            @if($rol == 2)
+@if($rol == 2)
                 {{-- MÓDULO 4: COMUNICACIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFour">
@@ -175,9 +175,9 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif
+@endif
 
-            @if($rol == 1)
+@if($rol == 1)
                 {{-- MÓDULO 5: GESTIÓN BASE (Usuarios y Roles) --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFive">
@@ -193,7 +193,7 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-            @endif 
+@endif               
             </div>
         </div>
 </div> 

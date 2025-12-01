@@ -301,7 +301,7 @@
         <div class="container mt-5">
 <div class="sidebar">
         <div class="p-3">
-            <h5 class="text-white mb-3">Módulos DB</h5>
+            <h5 class="text-white mb-3">Módulos</h5>
             <div class="accordion accordion-flush" id="dbAccordion">
 @php
 $rol = session('user.Codigo_Rol');
@@ -394,22 +394,5 @@ $rol = session('user.Codigo_Rol');
 @endif               
             </div>
         </div>
-    </div>
-        </div>
-        <div>
-          <p>
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
-                    Toggle width collapse
-                </button>
-                </p>
-            <div style="min-height: 120px;">
-            <div class="collapse collapse-horizontal" id="collapseWidthExample">
-                <div class="card card-body" style="width: 300px;">
-                This is some placeholder content for a horizontal collapse. It’s hidden by default and shown when triggered.
-                </div>
-            </div>
-            </div>
-        </div>
-  </div>
 </div> 
 

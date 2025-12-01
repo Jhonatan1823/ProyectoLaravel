@@ -54,7 +54,7 @@
         <div class="container mt-5">
 <div class="sidebar">
         <div class="p-3">
-            <h5 class="text-white mb-3">Módulos DB</h5>
+            <h5 class="text-white mb-3">Inicia Sesion Para Navegar por el Sistema</h5>
             <div class="accordion accordion-flush" id="dbAccordion">
 @php
 $rol = session('user.Codigo_Rol');
@@ -104,6 +104,7 @@ $rol = session('user.Codigo_Rol');
                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#dbAccordion">
                         <div class="list-group list-group-flush">
                             <a href="{{ route('servicio.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-tools me-2"></i> Servicios Activos</a>
+                            <a href="{{ route('adminservicio') }}" class="list-group-item list-group-item-action"><i class="fas fa-tools me-2"></i> Simulacion Servicios (Vista de Tecnicos)</a>
                             <a href="{{ route('historial.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-history me-2"></i> Historial</a>
                         </div>
                     </div>
@@ -121,6 +122,7 @@ $rol = session('user.Codigo_Rol');
                     <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#dbAccordion">
                         <div class="list-group list-group-flush">
                             <a href="{{ route('chat.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Chat</a>
+                            <a href="{{ route('protochat') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Simulación Chat</a>
                             <a href="{{ route('mensajes.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-paper-plane me-2"></i> Mensajes</a>
                             <a href="{{ route('notificaciones.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i> Notificaciones</a>
                         </div>
@@ -147,22 +149,5 @@ $rol = session('user.Codigo_Rol');
 @endif               
             </div>
         </div>
-    </div>
-        </div>
-        <div>
-          <p>
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
-                    Toggle width collapse
-                </button>
-                </p>
-            <div style="min-height: 120px;">
-            <div class="collapse collapse-horizontal" id="collapseWidthExample">
-                <div class="card card-body" style="width: 300px;">
-                This is some placeholder content for a horizontal collapse. It’s hidden by default and shown when triggered.
-                </div>
-            </div>
-            </div>
-        </div>
-  </div>
 </div> 
    

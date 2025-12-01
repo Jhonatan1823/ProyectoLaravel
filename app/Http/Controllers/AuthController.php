@@ -15,7 +15,7 @@ class AuthController extends Controller
      */
     public function showLoginForm()
     {
-        // Si ya está autenticado, redirigir al dashboard
+        // Si ya está autenticado, redirigir al dashboard según su rol
         if (Auth::check()) {
             return $this->redirectByRole(Auth::user()->Codigo_Rol);
         }
@@ -28,40 +28,67 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-
+        // Validación CORREGIDA según tu formulario
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string',
+            'ID_Usuario' => 'required|string',
+            'Codigo_Documento' => 'required|string',
             'password' => 'required|string'
+        ], [
+            'ID_Usuario.required' => 'El número de documento es requerido',
+            'Codigo_Documento.required' => 'El tipo de documento es requerido',
+            'password.required' => 'La contraseña es requerida'
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
-       
-        $user = User::where('Correo', $request->email)
-                    ->orWhere('ID_Usuario', $request->email)
+        // Buscar usuario por documento (como se usa en tu formulario)
+        $user = User::where('ID_Usuario', $request->ID_Usuario)
                     ->first();
 
-        
-        if ($user) {
-            // Verificar la contraseña con Hash::check()
-            if (Hash::check($request->password, $user->Contraseña)) {
-         
-                Auth::login($user, $request->remember ?? false);
-                
-           
-                $request->session()->regenerate();
-                
-           
-                return $this->redirectByRole($user->Codigo_Rol);
-            }
+        // Verificar que existe el usuario
+        if (!$user) {
+            return back()->withErrors([
+                'ID_Usuario' => 'Documento no registrado en el sistema.',
+            ])->withInput($request->only('ID_Usuario', 'Codigo_Documento', 'remember'));
         }
 
+        // Verificar que el tipo de documento coincida (opcional pero recomendado)
+        if ($user->Codigo_Documento != $request->Codigo_Documento) {
+            return back()->withErrors([
+                'Codigo_Documento' => 'El tipo de documento no coincide con el registrado.',
+            ])->withInput($request->only('ID_Usuario', 'Codigo_Documento', 'remember'));
+        }
+
+        // Verificar la contraseña
+        // IMPORTANTE: Si tu BD tiene contraseñas en texto plano, necesitamos manejarlo diferente
+        $passwordValid = false;
         
+        // Intentar primero con Hash::check (para contraseñas hasheadas)
+        if (Hash::check($request->password, $user->Contraseña)) {
+            $passwordValid = true;
+        }
+        // Si no funciona con hash, verificar texto plano
+        elseif ($request->password === $user->Contraseña) {
+            $passwordValid = true;
+        }
+
+        if ($passwordValid) {
+            // Autenticar al usuario
+            Auth::login($user, $request->remember ?? false);
+            
+            // Regenerar sesión
+            $request->session()->regenerate();
+            
+            // Redirigir según rol
+            return $this->redirectByRole($user->Codigo_Rol);
+        }
+
+        // Si llegamos aquí, la contraseña es incorrecta
         return back()->withErrors([
-            'email' => 'Las credenciales proporcionadas no son correctas.',
-        ])->withInput($request->only('email', 'remember'));
+            'password' => 'La contraseña es incorrecta.',
+        ])->withInput($request->only('ID_Usuario', 'Codigo_Documento', 'remember'));
     }
 
     /**
@@ -69,8 +96,6 @@ class AuthController extends Controller
      */
     private function redirectByRole($rol)
     {
-        $message = '¡Bienvenido!';
-
         switch ($rol) {
             case 1: // Técnico
                 return redirect()->route('tecnico.dashboard')->with('success', '¡Bienvenido Técnico!');
@@ -82,7 +107,7 @@ class AuthController extends Controller
                 return redirect()->route('admin.dashboard')->with('success', '¡Bienvenido Administrador!');
                 
             default:
-                return redirect('/dashboard')->with('success', $message);
+                return redirect('/welcome')->with('success', '¡Bienvenido!');
         }
     }
 
@@ -91,35 +116,28 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
- 
         Auth::logout();
         
-       
         $request->session()->invalidate();
         
-      
         $request->session()->regenerateToken();
         
-       
         return redirect('/login')->with('success', 'Sesión cerrada correctamente.');
     }
 
     /**
-     * Dashboard principal
+     * Dashboard principal (por si acaso)
      */
     public function dashboard()
     {
-       
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Debe iniciar sesión primero.');
         }
 
         $user = Auth::user();
         
-        return view('dashboard', [
-            'user' => $user,
-            'rolNombre' => $this->getNombreRol($user->Codigo_Rol)
-        ]);
+        // Redirigir según rol en lugar de mostrar un dashboard genérico
+        return $this->redirectByRole($user->Codigo_Rol);
     }
 
     /**
@@ -149,36 +167,40 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        
+        // Validación para registro
         $validator = Validator::make($request->all(), [
             'ID_Usuario' => 'required|string|unique:usuario,ID_Usuario',
+            'Codigo_Documento' => 'required|in:1,2,3,4,5',
             'Nombre' => 'required|string|max:50',
             'Correo' => 'required|email|unique:usuario,Correo',
             'password' => 'required|string|min:6|confirmed',
             'Codigo_Rol' => 'required|in:1,2,3'
+        ], [
+            'ID_Usuario.unique' => 'Este número de documento ya está registrado',
+            'Correo.unique' => 'Este correo electrónico ya está registrado'
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
-        
+        // Crear usuario (hash de contraseña se hará automáticamente si configuras el modelo User)
         $user = User::create([
             'ID_Usuario' => $request->ID_Usuario,
-            'Codigo_Documento' => 1, // Valor por defecto
+            'Codigo_Documento' => $request->Codigo_Documento,
             'Nombre' => $request->Nombre,
             'Fecha_Nacimiento' => now(), // Fecha actual por defecto
             'Direccion' => 'Por definir',
             'Telefono' => '0000000000',
             'Correo' => $request->Correo,
-            'Contraseña' => $request->password, 
+            'Contraseña' => Hash::make($request->password), // Hash de la contraseña
             'Codigo_Rol' => $request->Codigo_Rol
         ]);
 
-    
+        // Autenticar al usuario después del registro
         Auth::login($user);
 
-    
+        // Redirigir según rol
         return $this->redirectByRole($user->Codigo_Rol)
                     ->with('success', '¡Cuenta creada exitosamente!');
     }
@@ -211,7 +233,6 @@ class AuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-  
         $user->update([
             'Nombre' => $request->Nombre,
             'Correo' => $request->Correo,
@@ -238,14 +259,24 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
+        // Verificar contraseña actual
+        $passwordValid = false;
+        
+        if (Hash::check($request->current_password, $user->Contraseña)) {
+            $passwordValid = true;
+        }
+        // También verificar texto plano por si acaso
+        elseif ($request->current_password === $user->Contraseña) {
+            $passwordValid = true;
+        }
 
-        if (!Hash::check($request->current_password, $user->Contraseña)) {
+        if (!$passwordValid) {
             return back()->withErrors(['current_password' => 'La contraseña actual es incorrecta.']);
         }
 
-
+        // Actualizar con hash de la nueva contraseña
         $user->update([
-            'Contraseña' => $request->new_password
+            'Contraseña' => Hash::make($request->new_password)
         ]);
 
         return back()->with('success', 'Contraseña cambiada correctamente.');

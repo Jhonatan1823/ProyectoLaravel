@@ -42,17 +42,93 @@ Route::middleware(['auth'])->group(function () {
     // ✅ LOGOUT (solo para usuarios autenticados)
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    // ✅ DASHBOARDS
+    // ✅ DASHBOARDS GENERALES
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    
+    // ✅ DASHBOARDS POR ROL (mantengo tus rutas originales)
     Route::get('/cliente', function(){ return view('cliente.dashboard'); })->name('cliente.dashboard');
     Route::get('/tecnico', function(){ return view('tecnico.dashboard'); })->name('tecnico.dashboard');
     Route::get('/admin', function(){ return view('admin.dashboard'); })->name('admin.dashboard');
 
     // ========================
-    // 📁 TUS RUTAS CRUD (Todas protegidas)
+    // 👤 RUTAS PARA CLIENTES (Rol 2) - NUEVO GRUPO
+    // ========================
+    Route::prefix('cliente')->name('cliente.')->middleware(['auth'])->group(function () {
+        
+        // 📱 Servicios del Cliente
+        Route::get('/mis-servicios', [ServicioController::class, 'misServicios'])->name('mis.servicios');
+        Route::get('/servicios/nuevo', [ServicioController::class, 'create'])->name('servicios.nuevo');
+        Route::get('/servicios/{id}/detalle', [ServicioController::class, 'showCliente'])->name('servicios.detalle');
+        
+        // 💬 Chat del Cliente
+        Route::get('/mis-chats', [ChatController::class, 'misChats'])->name('mis.chats');
+        Route::get('/chat/{servicio_id}', [ChatController::class, 'chatServicio'])->name('chat.servicio');
+        Route::post('/chat/{servicio_id}/mensaje', [MensajesController::class, 'enviarMensajeCliente'])->name('chat.mensaje');
+        
+        // 🛒 Productos para Clientes (vista catalogo)
+        Route::get('/catalogo', [ProductoController::class, 'catalogoCliente'])->name('catalogo');
+        Route::get('/producto/{id}/detalle', [ProductoController::class, 'showCliente'])->name('producto.detalle');
+        
+        // ❓ Preguntas sobre productos
+        Route::get('/mis-preguntas', [PreguntaController::class, 'misPreguntas'])->name('mis.preguntas');
+        Route::post('/producto/{id}/preguntar', [PreguntaController::class, 'preguntarProducto'])->name('producto.preguntar');
+        
+        // 💬 Mis Comentarios
+        Route::get('/mis-comentarios', [ComentarioController::class, 'misComentarios'])->name('mis.comentarios');
+        
+        // 👤 Perfil del Cliente
+        Route::get('/perfil', [AuthController::class, 'profile'])->name('perfil');
+        Route::post('/perfil/actualizar', [AuthController::class, 'updateProfile'])->name('perfil.actualizar');
+        Route::post('/perfil/cambiar-password', [AuthController::class, 'changePassword'])->name('perfil.password');
+    });
+
+    // ========================
+    // 🔧 RUTAS PARA TÉCNICOS (Rol 1) - NUEVO GRUPO
+    // ========================
+    Route::prefix('tecnico')->name('tecnico.')->middleware(['auth'])->group(function () {
+        
+        // 🔧 Servicios asignados al técnico
+        Route::get('/servicios-asignados', [ServicioController::class, 'serviciosAsignados'])->name('servicios.asignados');
+        Route::get('/servicio/{id}/gestionar', [ServicioController::class, 'gestionarServicio'])->name('servicio.gestionar');
+        Route::put('/servicio/{id}/actualizar-estado', [ServicioController::class, 'actualizarEstado'])->name('servicio.estado');
+        
+        // 📊 Historial del Técnico
+        Route::get('/mi-historial', [HistorialController::class, 'historialTecnico'])->name('mi.historial');
+        Route::post('/servicio/{id}/registrar-historial', [HistorialController::class, 'registrarEvento'])->name('servicio.historial');
+        
+        // 💬 Chats asignados
+        Route::get('/chats-asignados', [ChatController::class, 'chatsAsignados'])->name('chats.asignados');
+        Route::get('/chat/{servicio_id}/atender', [ChatController::class, 'atenderChat'])->name('chat.atender');
+        Route::post('/chat/{servicio_id}/responder', [MensajesController::class, 'responderMensaje'])->name('chat.responder');
+        
+        // 👤 Perfil del Técnico
+        Route::get('/perfil', [AuthController::class, 'profile'])->name('perfil');
+        
+        // 📈 Estadísticas
+        Route::get('/estadisticas', function(){ return view('tecnico.estadisticas'); })->name('estadisticas');
+    });
+
+    // ========================
+    // 👑 RUTAS PARA ADMINISTRADORES (Rol 3) - NUEVO GRUPO
+    // ========================
+    Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+        
+        // 📊 Dashboard administrativo
+        Route::get('/panel', function(){ return view('admin.panel'); })->name('panel');
+        
+        // 📈 Reportes y estadísticas
+        Route::get('/reportes', function(){ return view('admin.reportes'); })->name('reportes');
+        Route::get('/estadisticas', function(){ return view('admin.estadisticas'); })->name('estadisticas');
+        
+        // 👤 Perfil del Administrador
+        Route::get('/perfil', [AuthController::class, 'profile'])->name('perfil');
+    });
+
+    // ========================
+    // 📁 TUS RUTAS CRUD ORIGINALES (SE MANTIENEN)
     // ========================
 
-    // Módulo de Usuarios
+    // Módulo de Usuarios (accesible según permisos)
     Route::get('/usuario', [UsuarioController::class, 'index'])->name('usuario.index');
     Route::post('/usuario', [UsuarioController::class, 'store'])->name('usuario.store');
     Route::get('/usuario/{documento}/edit', [UsuarioController::class, 'edit'])->name('usuario.edit');
@@ -136,6 +212,14 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/mensajes/{documento}', [MensajesController::class, 'update'])->name('mensajes.update');
     Route::delete('/mensajes/{id}', [MensajesController::class, 'destroy'])->name('mensajes.destroy');
 
+});
+
+// ========================
+// 🔄 RUTAS DE FALLBACK
+// ========================
+
+Route::fallback(function () {
+    return redirect('/login');
 });
 
 // ========================

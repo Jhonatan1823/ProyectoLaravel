@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
-      background: white; /* ✅ FONDO BLANCO */
+      background: white;
       min-height: 100vh;
     }
     
@@ -26,13 +26,13 @@
       width: 100%;
       background: white;
       border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* ✅ Sombra suave */
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       overflow: hidden;
-      border: 1px solid #e0e0e0; /* ✅ Borde gris claro */
+      border: 1px solid #e0e0e0;
     }
     
     .header {
-      background: #d20000; /* ✅ ROJO */
+      background: #d20000;
       color: white;
       padding: 20px;
       text-align: center;
@@ -48,19 +48,20 @@
     }
     
     .auth-info button {
-      background: white; /* ✅ BLANCO para el botón volver */
+      background: white;
       color: #d20000;
       border: none;
       padding: 8px 16px;
-      border-radius: 5px;
+      border-radius: 8000px;
       cursor: pointer;
       text-decoration: none;
-     border-radius: 8000px;
       display: inline-block;
+      font-weight: bold;
     }
     
     .auth-info button:hover {
-      background: #333; /* ✅ GRIS OSCURO al hover */
+      background: #333;
+      color: white;
     }
     
     .auth-info a {
@@ -69,13 +70,13 @@
     
     .login-container {
       padding: 30px;
-      background: white; /* ✅ FONDO BLANCO */
+      background: white;
     }
     
     .login-container h2 {
       text-align: center;
       margin-bottom: 25px;
-      color: #333; /* ✅ TEXTO OSCURO */
+      color: #333;
     }
     
     .form-group {
@@ -86,51 +87,53 @@
       display: block;
       margin-bottom: 5px;
       font-weight: bold;
-      color: #555; /* ✅ TEXTO GRIS OSCURO */
+      color: #555;
     }
     
-    .form-group input {
+    .form-group input,
+    .form-group select {
       width: 100%;
       padding: 12px;
-      border: 2px solid #ddd; /* ✅ BORDES GRIS CLARO */
+      border: 2px solid #ddd;
       border-radius: 8px;
       font-size: 16px;
       box-sizing: border-box;
-      background: white; /* ✅ FONDO BLANCO */
+      background: white;
     }
     
-    .form-group input:focus {
+    .form-group input:focus,
+    .form-group select:focus {
       outline: none;
-      border-color: #d20000; /* ✅ BORDE ROJO al enfocar */
+      border-color: #d20000;
     }
     
     .btn-login {
-      background: white; /* ✅ ROJO */
+      background:white;
       color: #d20000;
       width: 100%;
       padding: 12px;
       border: none;
-      border-radius: 8000px;
+      border-radius: 80000px;
       font-size: 16px;
       cursor: pointer;
       margin-top: 10px;
       font-weight: bold;
+      transition: background 0.3s ease;
     }
     
     .btn-login:hover {
-      background: #333; /* ✅ ROJO OSCURO al hover */
-      border-radius: 8000px;
+      background: #333;
     }
     
     .register-link {
       text-align: center;
       margin-top: 12px;
       font-size: 14px;
-      color: #555; /* ✅ TEXTO GRIS */
+      color: #555;
     }
     
     .register-link a {
-      color: #d20000; /* ✅ ENLACE ROJO */
+      color: #d20000;
       text-decoration: none;
       font-weight: bold;
     }
@@ -148,29 +151,15 @@
     }
     
     .alert-danger {
-      background: #ffe6e6; /* ✅ FONDO ROJO MUY CLARO */
-      color: #d20000; /* ✅ TEXTO ROJO */
+      background: #ffe6e6;
+      color: #d20000;
       border: 1px solid #ffb3b3;
     }
     
     .alert-success {
-      background: #e6ffe6; /* ✅ FONDO VERDE MUY CLARO */
-      color: #008000; /* ✅ TEXTO VERDE */
+      background: #e6ffe6;
+      color: #008000;
       border: 1px solid #99ff99;
-    }
-    
-    .demo-info {
-      background: #f5f5f5; /* ✅ FONDO GRIS MUY CLARO */
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 15px;
-      margin-top: 20px;
-      font-size: 12px;
-      color: #666; /* ✅ TEXTO GRIS */
-    }
-    
-    .demo-info strong {
-      color: #d20000; /* ✅ TÍTULO ROJO */
     }
   </style>
 </head>
@@ -181,7 +170,7 @@
         <h1>Celuaccel</h1>
         <div class="auth-info">
           <a href="{{ url('/') }}">
-            <button>Volver</button>
+            <button>← Volver</button>
           </a>
         </div>
       </header>
@@ -210,43 +199,70 @@
           </div>
         @endif
 
-        <form action="{{ route('login.submit') }}" method="POST">
+        <form action="{{ route('login.submit') }}" method="POST" id="loginForm">
           @csrf
           
+          <!-- Campo de Tipo de Documento -->
           <div class="form-group">
-            <label for="email">Usuario:</label>
-            <input type="text" id="email" name="email" value="{{ old('email') }}" required 
-                   placeholder="Documento o correo electrónico">
+            <label for="Codigo_Documento">Tipo de Documento:</label>
+            <select id="Codigo_Documento" name="Codigo_Documento" required>
+              <option value="" selected disabled>Seleccione un Documento</option>
+              <option value="1">Cédula de Ciudadanía</option>
+              <option value="2">Tarjeta de Identidad</option>
+              <option value="3">Cédula de Extranjería</option>
+              <option value="4">Pasaporte</option>
+              <option value="5">PEP</option>
+            </select>
           </div>
 
+          <!-- Campo de Número de Documento -->
           <div class="form-group">
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required 
-                   placeholder="Tu contraseña">
+            <label for="ID_Usuario">Número de Documento:</label>
+            <input type="text" id="ID_Usuario" name="ID_Usuario" 
+                   placeholder="Ingrese su número de documento" required>
           </div>
 
-          <button type="submit" class="btn-login">Iniciar Sesión</button>
+          <!-- Campo de Contraseña -->
+          <div class="form-group">
+            <label for="Contraseña">Contraseña:</label>
+            <input type="password" id="Contraseña" name="password" 
+                   placeholder="Ingrese su contraseña" required>
+          </div>
+
+          <!-- Botón de Login -->
+          <button type="submit" class="btn-login" id="loginBtn">
+            Iniciar Sesión
+          </button>
         </form>
 
         <div class="register-link">
-          <p>¿No tienes cuenta? <a href="#">Regístrate</a></p>
+          <p>¿No tienes cuenta? <a href="#">Regístrate aquí</a></p>
         </div>
-              </main>
+      </main>
     </div>
  </div>
 
   <script>
-    // Auto-enfocar el campo email
+    // Auto-enfocar el campo documento
     document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('email').focus();
+      document.getElementById('ID_Usuario').focus();
     });
 
     // Efecto de carga al enviar formulario
-    document.querySelector('form').addEventListener('submit', function(e) {
-      const btn = document.querySelector('.btn-login');
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      const btn = document.getElementById('loginBtn');
       btn.disabled = true;
       btn.textContent = 'Iniciando sesión...';
     });
+
+    // Validación en tiempo real (solo números en documento)
+    document.getElementById('ID_Usuario').addEventListener('input', function(e) {
+      // Solo permitir números en documento
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    // Seleccionar automáticamente Cédula de Ciudadanía (opción más común)
+    document.getElementById('Codigo_Documento').value = '1';
   </script>
 </body>
 </html>

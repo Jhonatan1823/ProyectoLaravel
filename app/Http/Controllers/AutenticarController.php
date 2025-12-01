@@ -56,3 +56,4 @@ class AuntenticarController extends Controller
         return redirect()->route('iniciosesion')->with('success','Has cerrado sesion correctamente');
     }
 }
+

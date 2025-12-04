@@ -68,10 +68,6 @@
             justify-content: center;
         }
         
-        .logo-icon {
-            font-size: 1.8rem;
-        }
-        
         .user-profile {
             padding: 20px;
             text-align: center;
@@ -472,6 +468,8 @@
             display: block;
         }
     </style>
+    <!-- Font Awesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
     <!-- OVERLAY PARA MÓVIL -->
@@ -485,7 +483,6 @@
             <!-- LOGO Y TOGGLE -->
             <div class="sidebar-header">
                 <a href="/cliente" class="logo">
-                    <span class="logo-icon">📱</span>
                     <span class="logo-text">Celuaccel</span>
                 </a>
             </div>
@@ -508,7 +505,7 @@
                     <!-- DASHBOARD -->
                     <li class="nav-item">
                         <a href="/cliente" class="nav-link active">
-                            <span class="nav-icon">📊</span>
+                            <span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span>
                             <span class="nav-text">Dashboard</span>
                         </a>
                     </li>
@@ -516,29 +513,29 @@
                     <!-- SERVICIOS (CON SUBMENÚ) -->
                     <li class="nav-item">
                         <a href="#serviciosSubmenu" class="nav-link" id="serviciosToggle">
-                            <span class="nav-icon">🔧</span>
+                            <span class="nav-icon"><i class="fas fa-tools"></i></span>
                             <span class="nav-text">Mis Servicios</span>
                             <span class="nav-arrow">▼</span>
                         </a>
                         <ul class="submenu" id="serviciosSubmenu">
                             <li class="submenu-item">
                                 <a href="/servicios" class="submenu-link">
-                                    <span>📋 Ver Todos</span>
+                                    <span>Ver Todos</span>
                                 </a>
                             </li>
                             <li class="submenu-item">
                                 <a href="/servicios" class="submenu-link">
-                                    <span>➕ Nuevo Servicio</span>
+                                    <span>Nuevo Servicio</span>
                                 </a>
                             </li>
                             <li class="submenu-item">
                                 <a href="/servicios" class="submenu-link">
-                                    <span>⏳ En Proceso</span>
+                                    <span>En Proceso</span>
                                 </a>
                             </li>
                             <li class="submenu-item">
                                 <a href="/servicios" class="submenu-link">
-                                    <span>✅ Completados</span>
+                                    <span>Completados</span>
                                 </a>
                             </li>
                         </ul>
@@ -547,24 +544,24 @@
                     <!-- CHAT Y COMUNICACIÓN -->
                     <li class="nav-item">
                         <a href="#chatSubmenu" class="nav-link" id="chatToggle">
-                            <span class="nav-icon">💬</span>
+                            <span class="nav-icon"><i class="fas fa-comments"></i></span>
                             <span class="nav-text">Comunicación</span>
                             <span class="nav-arrow">▼</span>
                         </a>
                         <ul class="submenu" id="chatSubmenu">
                             <li class="submenu-item">
                                 <a href="/chats" class="submenu-link">
-                                    <span>📨 Mis Chats</span>
+                                    <span>Mis Chats</span>
                                 </a>
                             </li>
                             <li class="submenu-item">
                                 <a href="/chats" class="submenu-link">
-                                    <span>👨‍🔧 Chat con Técnico</span>
+                                    <span>Chat con Técnico</span>
                                 </a>
                             </li>
                             <li class="submenu-item">
                                 <a href="/mensajes" class="submenu-link">
-                                    <span>📩 Mensajes</span>
+                                    <span>Mensajes</span>
                                 </a>
                             </li>
                         </ul>
@@ -573,24 +570,24 @@
                     <!-- PRODUCTOS Y CATÁLOGO -->
                     <li class="nav-item">
                         <a href="#productosSubmenu" class="nav-link" id="productosToggle">
-                            <span class="nav-icon">🛒</span>
+                            <span class="nav-icon"><i class="fas fa-shopping-cart"></i></span>
                             <span class="nav-text">Productos</span>
                             <span class="nav-arrow">▼</span>
                         </a>
                         <ul class="submenu" id="productosSubmenu">
                             <li class="submenu-item">
                                 <a href="/productos" class="submenu-link">
-                                    <span>📋 Catálogo</span>
+                                    <span>Catálogo</span>
                                 </a>
                             </li>
                             <li class="submenu-item">
                                 <a href="/productos" class="submenu-link">
-                                    <span>⭐ Favoritos</span>
+                                    <span>Favoritos</span>
                                 </a>
                             </li>
                             <li class="submenu-item">
                                 <a href="/productos" class="submenu-link">
-                                    <span>❓ Mis Preguntas</span>
+                                    <span>Mis Preguntas</span>
                                 </a>
                             </li>
                         </ul>
@@ -599,24 +596,24 @@
                     <!-- SOPORTE Y AYUDA -->
                     <li class="nav-item">
                         <a href="#soporteSubmenu" class="nav-link" id="soporteToggle">
-                            <span class="nav-icon">❓</span>
+                            <span class="nav-icon"><i class="fas fa-question-circle"></i></span>
                             <span class="nav-text">Soporte</span>
                             <span class="nav-arrow">▼</span>
                         </a>
                         <ul class="submenu" id="soporteSubmenu">
                             <li class="submenu-item">
                                 <a href="/preguntas" class="submenu-link">
-                                    <span>📖 FAQ</span>
+                                    <span>FAQ</span>
                                 </a>
                             </li>
                             <li class="submenu-item">
                                 <a href="/preguntas" class="submenu-link">
-                                    <span>📞 Contactar Soporte</span>
+                                    <span>Contactar Soporte</span>
                                 </a>
                             </li>
                             <li class="submenu-item">
                                 <a href="/comentarios" class="submenu-link">
-                                    <span>💬 Dejar Comentario</span>
+                                    <span>Dejar Comentario</span>
                                 </a>
                             </li>
                         </ul>
@@ -625,7 +622,7 @@
                     <!-- CONFIGURACIÓN -->
                     <li class="nav-item">
                         <a href="/profile" class="nav-link">
-                            <span class="nav-icon">⚙️</span>
+                            <span class="nav-icon"><i class="fas fa-cog"></i></span>
                             <span class="nav-text">Configuración</span>
                         </a>
                     </li>
@@ -640,7 +637,7 @@
                         <form method="POST" action="{{ route('logout') }}" style="display: block;">
                             @csrf
                             <button type="submit" class="nav-link" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
-                                <span class="nav-icon">🚪</span>
+                                <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
                                 <span class="nav-text">Cerrar Sesión</span>
                             </button>
                         </form>
@@ -654,14 +651,14 @@
             <!-- HEADER SUPERIOR -->
             <header class="top-header">
                 <button class="menu-toggle" id="menuToggle">
-                    ☰
+                    <i class="fas fa-bars"></i>
                 </button>
                 
                 <h1 class="page-title">Dashboard Cliente</h1>
                 
                 <div class="header-actions">
                     <button class="notification-btn">
-                        🔔
+                        <i class="fas fa-bell"></i>
                         <span class="notification-badge">3</span>
                     </button>
                     
@@ -674,14 +671,14 @@
             <!-- MENSAJES -->
             @if(session('success'))
             <div class="alert-message alert-success">
-                <span>✅</span>
+                <span><i class="fas fa-check-circle"></i></span>
                 <span>{{ session('success') }}</span>
             </div>
             @endif
             
             @if(session('error'))
             <div class="alert-message alert-error">
-                <span>❌</span>
+                <span><i class="fas fa-exclamation-circle"></i></span>
                 <span>{{ session('error') }}</span>
             </div>
             @endif
@@ -691,7 +688,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <h3>Servicios Activos</h3>
-                        <span class="stat-icon">🔧</span>
+                        <span class="stat-icon"><i class="fas fa-tools"></i></span>
                     </div>
                     <div class="stat-value">2</div>
                     <div class="stat-label">Reparaciones en proceso</div>
@@ -700,7 +697,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <h3>Chats Activos</h3>
-                        <span class="stat-icon">💬</span>
+                        <span class="stat-icon"><i class="fas fa-comments"></i></span>
                     </div>
                     <div class="stat-value">3</div>
                     <div class="stat-label">Conversaciones abiertas</div>
@@ -709,7 +706,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <h3>Productos Vistos</h3>
-                        <span class="stat-icon">👁️</span>
+                        <span class="stat-icon"><i class="fas fa-eye"></i></span>
                     </div>
                     <div class="stat-value">12</div>
                     <div class="stat-label">En el último mes</div>
@@ -718,7 +715,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <h3>Satisfacción</h3>
-                        <span class="stat-icon">⭐</span>
+                        <span class="stat-icon"><i class="fas fa-star"></i></span>
                     </div>
                     <div class="stat-value">4.8</div>
                     <div class="stat-label">De 5.0 promedio</div>
@@ -730,42 +727,42 @@
             
             <div class="modules-grid">
                 <div class="module-card">
-                    <div class="module-icon">🔧</div>
+                    <div class="module-icon"><i class="fas fa-tools"></i></div>
                     <h3 class="module-title">Nueva Reparación</h3>
                     <p class="module-desc">Solicita reparación para tu dispositivo móvil. Presupuesto inmediato.</p>
                     <a href="/servicios" class="module-btn">Solicitar</a>
                 </div>
                 
                 <div class="module-card">
-                    <div class="module-icon">💬</div>
+                    <div class="module-icon"><i class="fas fa-comments"></i></div>
                     <h3 class="module-title">Chat con Soporte</h3>
                     <p class="module-desc">Habla directamente con nuestros técnicos especializados.</p>
                     <a href="/chats" class="module-btn">Iniciar Chat</a>
                 </div>
                 
                 <div class="module-card">
-                    <div class="module-icon">🛒</div>
+                    <div class="module-icon"><i class="fas fa-shopping-cart"></i></div>
                     <h3 class="module-title">Tienda Online</h3>
                     <p class="module-desc">Compra repuestos, accesorios y dispositivos nuevos.</p>
                     <a href="/productos" class="module-btn">Ver Tienda</a>
                 </div>
                 
                 <div class="module-card">
-                    <div class="module-icon">📅</div>
+                    <div class="module-icon"><i class="fas fa-calendar-alt"></i></div>
                     <h3 class="module-title">Mis Citas</h3>
                     <p class="module-desc">Gestiona y agenda citas para servicios en tienda.</p>
                     <a href="/servicios" class="module-btn">Ver Citas</a>
                 </div>
                 
                 <div class="module-card">
-                    <div class="module-icon">📄</div>
+                    <div class="module-icon"><i class="fas fa-file-invoice"></i></div>
                     <h3 class="module-title">Mis Facturas</h3>
                     <p class="module-desc">Consulta y descarga tus facturas y comprobantes.</p>
                     <a href="/servicios" class="module-btn">Ver Facturas</a>
                 </div>
                 
                 <div class="module-card">
-                    <div class="module-icon">👤</div>
+                    <div class="module-icon"><i class="fas fa-user-edit"></i></div>
                     <h3 class="module-title">Mi Perfil</h3>
                     <p class="module-desc">Actualiza tu información personal y preferencias.</p>
                     <a href="/profile" class="module-btn">Editar Perfil</a>
@@ -774,19 +771,31 @@
             
             <!-- INFORMACIÓN ADICIONAL -->
             <div style="background: #f9f9f9; padding: 25px; border-radius: 12px; margin-top: 30px;">
-                <h3 style="color: var(--secondary-color); margin-bottom: 15px;">📌 Información Importante</h3>
+                <h3 style="color: var(--secondary-color); margin-bottom: 15px;">
+                    <i class="fas fa-info-circle" style="color: var(--primary-color);"></i>
+                    Información Importante
+                </h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
                     <div>
-                        <h4 style="color: var(--primary-color); margin-bottom: 10px;">Horario de Atención</h4>
+                        <h4 style="color: var(--primary-color); margin-bottom: 10px;">
+                            <i class="fas fa-clock"></i> Horario de Atención
+                        </h4>
                         <p style="color: #666;">Lunes a Viernes: 8:00 AM - 6:00 PM<br>Sábados: 9:00 AM - 2:00 PM</p>
                     </div>
                     <div>
-                        <h4 style="color: var(--primary-color); margin-bottom: 10px;">Contacto de Emergencia</h4>
-                        <p style="color: #666;">📞 01-800-CELUACCEL<br>📧 soporte@celuaccel.com</p>
+                        <h4 style="color: var(--primary-color); margin-bottom: 10px;">
+                            <i class="fas fa-phone"></i> Contacto de Emergencia
+                        </h4>
+                        <p style="color: #666;">Teléfono: 01-800-CELUACCEL<br>Email: soporte@celuaccel.com</p>
                     </div>
                     <div>
-                        <h4 style="color: var(--primary-color); margin-bottom: 10px;">Estado del Sistema</h4>
-                        <p style="color: #666;">✅ <strong>Operativo</strong><br>Todos los servicios funcionando</p>
+                        <h4 style="color: var(--primary-color); margin-bottom: 10px;">
+                            <i class="fas fa-server"></i> Estado del Sistema
+                        </h4>
+                        <p style="color: #666;">
+                            <i class="fas fa-check-circle" style="color: green;"></i> 
+                            <strong>Operativo</strong><br>Todos los servicios funcionando
+                        </p>
                     </div>
                 </div>
             </div>

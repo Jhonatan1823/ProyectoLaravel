@@ -27,11 +27,14 @@ Route::get('/', function () {
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
-// ✅ VISTAS PÚBLICAS
-Route::get('/index', function(){ return view('index'); })->name('index');
-Route::get('/iniciosesion', function(){ return view('iniciosesion'); })->name('iniciosesion');
-Route::get('/protochat', function(){ return view('protochat'); })->name('protochat');
-Route::get('/adminservicio', function(){ return view('adminservicio'); })->name('adminservicio');
+// ✅ Ruta temporal para hashear contraseñas (ELIMINAR EN PRODUCCIÓN)
+Route::get('/hash-passwords', [AuthController::class, 'hashExistingPasswords'])->name('hash.passwords');
+
+// ✅ VISTAS PÚBLICAS (usando vistas que SÍ tienes)
+Route::get('/index', function(){ return view('publico'); })->name('index'); // Usa publico.blade.php
+Route::get('/iniciosesion', function(){ return view('auth.login'); })->name('iniciosesion');
+Route::get('/protochat', function(){ return view('chat'); })->name('protochat'); // Usa chat.blade.php
+Route::get('/adminservicio', function(){ return view('servicio'); })->name('adminservicio'); // Usa servicio.blade.php
 
 // ========================
 // 🛡️ RUTAS PROTEGIDAS (Requieren autenticación)
@@ -39,42 +42,60 @@ Route::get('/adminservicio', function(){ return view('adminservicio'); })->name(
 
 Route::middleware(['auth'])->group(function () {
     
-    // ✅ LOGOUT (solo para usuarios autenticados)
+    // ✅ LOGOUT
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    // ✅ DASHBOARDS GENERALES
+    // ✅ DASHBOARD GENERAL (redirige según rol)
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     
-    // ✅ DASHBOARDS POR ROL (mantengo tus rutas originales)
-    Route::get('/cliente', function(){ return view('cliente.dashboard'); })->name('cliente.dashboard');
-    Route::get('/tecnico', function(){ return view('tecnico.dashboard'); })->name('tecnico.dashboard');
-    Route::get('/admin', function(){ return view('admin.dashboard'); })->name('admin.dashboard');
+    // ✅ RUTAS DE PERFIL GENERALES
+    Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
+    Route::post('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/change-password', [AuthController::class, 'changePassword'])->name('profile.password');
 
     // ========================
-    // 👤 RUTAS PARA CLIENTES (Rol 2) - NUEVO GRUPO
+    // 👤 RUTAS PARA CLIENTES (Rol 2) - USANDO VISTAS EXISTENTES
     // ========================
-    Route::prefix('cliente')->name('cliente.')->middleware(['auth'])->group(function () {
+    Route::prefix('cliente')->name('cliente.')->group(function () {
         
-        // 📱 Servicios del Cliente
-        Route::get('/mis-servicios', [ServicioController::class, 'misServicios'])->name('mis.servicios');
-        Route::get('/servicios/nuevo', [ServicioController::class, 'create'])->name('servicios.nuevo');
-        Route::get('/servicios/{id}/detalle', [ServicioController::class, 'showCliente'])->name('servicios.detalle');
+        // 📱 Dashboard Cliente - USA LA VISTA QUE TIENES
+        Route::get('/', function(){ 
+            // Verifica cuál vista existe realmente
+            if (view()->exists('cliente.clienteDashboard')) {
+                return view('cliente.clienteDashboard');
+            } else {
+                return view('cliente.dashboard');
+            }
+        })->name('dashboard');
         
-        // 💬 Chat del Cliente
-        Route::get('/mis-chats', [ChatController::class, 'misChats'])->name('mis.chats');
-        Route::get('/chat/{servicio_id}', [ChatController::class, 'chatServicio'])->name('chat.servicio');
-        Route::post('/chat/{servicio_id}/mensaje', [MensajesController::class, 'enviarMensajeCliente'])->name('chat.mensaje');
+        // 📱 Servicios del Cliente - USA VISTA SERVICIO.BLADE.PHP EXISTENTE
+        Route::get('/mis-servicios', function(){ 
+            return view('servicio'); // Vista existente en raíz
+        })->name('mis.servicios');
         
-        // 🛒 Productos para Clientes (vista catalogo)
-        Route::get('/catalogo', [ProductoController::class, 'catalogoCliente'])->name('catalogo');
-        Route::get('/producto/{id}/detalle', [ProductoController::class, 'showCliente'])->name('producto.detalle');
+        Route::get('/servicios/nuevo', function(){ 
+            return view('servicio'); // Misma vista para "nuevo"
+        })->name('servicios.nuevo');
         
-        // ❓ Preguntas sobre productos
-        Route::get('/mis-preguntas', [PreguntaController::class, 'misPreguntas'])->name('mis.preguntas');
-        Route::post('/producto/{id}/preguntar', [PreguntaController::class, 'preguntarProducto'])->name('producto.preguntar');
+        // 💬 Chat del Cliente - USA VISTA CHAT.BLADE.PHP EXISTENTE
+        Route::get('/mis-chats', function(){ 
+            return view('chat'); // Vista existente en raíz
+        })->name('mis.chats');
         
-        // 💬 Mis Comentarios
-        Route::get('/mis-comentarios', [ComentarioController::class, 'misComentarios'])->name('mis.comentarios');
+        // 🛒 Productos para Clientes - USA VISTA PRODUCTO.BLADE.PHP EXISTENTE
+        Route::get('/catalogo', function(){ 
+            return view('producto'); // Vista existente en raíz
+        })->name('catalogo');
+        
+        // ❓ Preguntas - USA VISTA PREGUNTA.BLADE.PHP EXISTENTE
+        Route::get('/mis-preguntas', function(){ 
+            return view('pregunta'); // Vista existente en raíz
+        })->name('mis.preguntas');
+        
+        // 💬 Mis Comentarios - USA VISTA COMENTARIOS.BLADE.PHP EXISTENTE
+        Route::get('/mis-comentarios', function(){ 
+            return view('comentarios'); // Vista existente en raíz
+        })->name('mis.comentarios');
         
         // 👤 Perfil del Cliente
         Route::get('/perfil', [AuthController::class, 'profile'])->name('perfil');
@@ -83,150 +104,201 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // ========================
-    // 🔧 RUTAS PARA TÉCNICOS (Rol 1) - NUEVO GRUPO
+    // 🔧 RUTAS PARA TÉCNICOS (Rol 1) - USANDO VISTAS EXISTENTES
     // ========================
-    Route::prefix('tecnico')->name('tecnico.')->middleware(['auth'])->group(function () {
+    Route::prefix('tecnico')->name('tecnico.')->group(function () {
         
-        // 🔧 Servicios asignados al técnico
-        Route::get('/servicios-asignados', [ServicioController::class, 'serviciosAsignados'])->name('servicios.asignados');
-        Route::get('/servicio/{id}/gestionar', [ServicioController::class, 'gestionarServicio'])->name('servicio.gestionar');
-        Route::put('/servicio/{id}/actualizar-estado', [ServicioController::class, 'actualizarEstado'])->name('servicio.estado');
+        // 🔧 Dashboard Técnico - USA LA VISTA QUE TIENES
+        Route::get('/', function(){ 
+            return view('tecnico.dashboard'); // Vista existente
+        })->name('dashboard');
         
-        // 📊 Historial del Técnico
-        Route::get('/mi-historial', [HistorialController::class, 'historialTecnico'])->name('mi.historial');
-        Route::post('/servicio/{id}/registrar-historial', [HistorialController::class, 'registrarEvento'])->name('servicio.historial');
+        // 🔧 Servicios asignados - USA VISTA SERVICIO.BLADE.PHP
+        Route::get('/servicios-asignados', function(){ 
+            return view('servicio'); // Vista existente
+        })->name('servicios.asignados');
         
-        // 💬 Chats asignados
-        Route::get('/chats-asignados', [ChatController::class, 'chatsAsignados'])->name('chats.asignados');
-        Route::get('/chat/{servicio_id}/atender', [ChatController::class, 'atenderChat'])->name('chat.atender');
-        Route::post('/chat/{servicio_id}/responder', [MensajesController::class, 'responderMensaje'])->name('chat.responder');
+        // 📊 Historial - USA VISTA HISTORIAL.BLADE.PHP
+        Route::get('/mi-historial', function(){ 
+            return view('historial'); // Vista existente
+        })->name('mi.historial');
+        
+        // 💬 Chats - USA VISTA CHAT.BLADE.PHP
+        Route::get('/chats-asignados', function(){ 
+            return view('chat'); // Vista existente
+        })->name('chats.asignados');
         
         // 👤 Perfil del Técnico
         Route::get('/perfil', [AuthController::class, 'profile'])->name('perfil');
         
-        // 📈 Estadísticas
-        Route::get('/estadisticas', function(){ return view('tecnico.estadisticas'); })->name('estadisticas');
+        // 📈 Estadísticas - REDIRIGE A DASHBOARD POR AHORA
+        Route::get('/estadisticas', function(){ 
+            return redirect()->route('tecnico.dashboard');
+        })->name('estadisticas');
     });
 
     // ========================
-    // 👑 RUTAS PARA ADMINISTRADORES (Rol 3) - NUEVO GRUPO
+    // 👑 RUTAS PARA ADMINISTRADORES (Rol 3) - USANDO VISTAS EXISTENTES
     // ========================
-    Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
         
-        // 📊 Dashboard administrativo
-        Route::get('/panel', function(){ return view('admin.panel'); })->name('panel');
+        // 📊 Dashboard Administrativo - USA LA VISTA QUE TIENES
+        Route::get('/', function(){ 
+            return view('admin.dashboard'); // Vista existente
+        })->name('dashboard');
         
-        // 📈 Reportes y estadísticas
-        Route::get('/reportes', function(){ return view('admin.reportes'); })->name('reportes');
-        Route::get('/estadisticas', function(){ return view('admin.estadisticas'); })->name('estadisticas');
+        // 📊 Panel administrativo - USA MISMA VISTA DASHBOARD
+        Route::get('/panel', function(){ 
+            return view('admin.dashboard'); // Misma vista
+        })->name('panel');
+        
+        // 📈 Reportes y estadísticas - REDIRIGEN POR AHORA
+        Route::get('/reportes', function(){ 
+            return redirect()->route('admin.dashboard');
+        })->name('reportes');
+        
+        Route::get('/estadisticas', function(){ 
+            return redirect()->route('admin.dashboard');
+        })->name('estadisticas');
         
         // 👤 Perfil del Administrador
         Route::get('/perfil', [AuthController::class, 'profile'])->name('perfil');
+        
+        // ========================
+        // 🛠️ MÓDULOS CRUD ADMINISTRATIVOS - USANDO VISTAS EXISTENTES EN RAÍZ
+        // ========================
+        
+        // Módulo de Usuarios - USA VISTA USUARIO.BLADE.PHP EXISTENTE
+        Route::get('/usuarios', function(){ 
+            return view('usuario'); // Vista existente en raíz
+        })->name('usuarios.index');
+        
+        // Módulo de Categorías - USA VISTA CATEGORIA.BLADE.PHP EXISTENTE
+        Route::get('/categorias', function(){ 
+            return view('categoria'); // Vista existente en raíz
+        })->name('categorias.index');
+        
+        // Módulo de Productos - USA VISTA PRODUCTO.BLADE.PHP EXISTENTE
+        Route::get('/productos', function(){ 
+            return view('producto'); // Vista existente en raíz
+        })->name('productos.index');
+        
+        // Módulo de Roles - USA VISTA ROLES.BLADE.PHP EXISTENTE
+        Route::get('/roles', function(){ 
+            return view('roles'); // Vista existente en raíz
+        })->name('roles.index');
+        
+        // Módulo de Tipos de Documento - USA VISTA TIPO.BLADE.PHP EXISTENTE
+        Route::get('/tipos-documento', function(){ 
+            return view('tipo'); // Vista existente en raíz
+        })->name('tipos.index');
     });
 
     // ========================
-    // 📁 TUS RUTAS CRUD ORIGINALES (SE MANTIENEN)
+    // 📁 RUTAS CRUD COMPARTIDAS - USANDO TUS VISTAS EXISTENTES
     // ========================
 
-    // Módulo de Usuarios (accesible según permisos)
+    // Módulo de Servicios - USA VISTA SERVICIO.BLADE.PHP
+    Route::get('/servicios', function(){ 
+        return view('servicio'); 
+    })->name('servicios.index');
+
+    // Módulo de Chat - USA VISTA CHAT.BLADE.PHP
+    Route::get('/chats', function(){ 
+        return view('chat'); 
+    })->name('chats.index');
+
+    // Módulo de Historial - USA VISTA HISTORIAL.BLADE.PHP
+    Route::get('/historiales', function(){ 
+        return view('historial'); 
+    })->name('historiales.index');
+
+    // Módulo de Comentarios - USA VISTA COMENTARIOS.BLADE.PHP
+    Route::get('/comentarios', function(){ 
+        return view('comentarios'); 
+    })->name('comentarios.index');
+
+    // Módulo de Notificaciones - USA VISTA NOTIFICACIONES.BLADE.PHP
+    Route::get('/notificaciones', function(){ 
+        return view('notificaciones'); 
+    })->name('notificaciones.index');
+
+    // Módulo de Preguntas - USA VISTA PREGUNTA.BLADE.PHP
+    Route::get('/preguntas', function(){ 
+        return view('pregunta'); 
+    })->name('preguntas.index');
+
+    // Módulo de Mensajes - USA VISTA MENSAJES.BLADE.PHP
+    Route::get('/mensajes', function(){ 
+        return view('mensajes'); 
+    })->name('mensajes.index');
+
+    // ========================
+    // 🔄 RUTAS DE REDIRECCIÓN PARA CONTROLADORES CRUD (opcional)
+    // ========================
+    
+    // Si quieres mantener compatibilidad con tus controladores CRUD existentes
     Route::get('/usuario', [UsuarioController::class, 'index'])->name('usuario.index');
-    Route::post('/usuario', [UsuarioController::class, 'store'])->name('usuario.store');
-    Route::get('/usuario/{documento}/edit', [UsuarioController::class, 'edit'])->name('usuario.edit');
-    Route::put('/usuario/{documento}', [UsuarioController::class, 'update'])->name('usuario.update');
-    Route::delete('/usuario/{id}', [UsuarioController::class, 'destroy'])->name('usuario.destroy');
-
-    // Módulo de Servicios
     Route::get('/servicio', [ServicioController::class, 'index'])->name('servicio.index');
-    Route::post('/servicio', [ServicioController::class, 'store'])->name('servicio.store');
-    Route::get('/servicio/{documento}/edit', [ServicioController::class, 'edit'])->name('servicio.edit');
-    Route::put('/servicio/{documento}', [ServicioController::class, 'update'])->name('servicio.update');
-    Route::delete('/servicio/{id}', [ServicioController::class, 'destroy'])->name('servicio.destroy');
-
-    // Módulo de Categorías
     Route::get('/categoria', [CategoriaController::class, 'index'])->name('categoria.index');
-    Route::post('/categoria', [CategoriaController::class, 'store'])->name('categoria.store');
-    Route::get('/categoria/{documento}/edit', [CategoriaController::class, 'edit'])->name('categoria.edit');
-    Route::put('/categoria/{documento}', [CategoriaController::class, 'update'])->name('categoria.update');
-    Route::delete('/categoria/{id}', [CategoriaController::class, 'destroy'])->name('categoria.destroy');
-
-    // Módulo de Chat
-    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
-    Route::get('/chat/{documento}/edit', [ChatController::class, 'edit'])->name('chat.edit');
-    Route::put('/chat/{documento}', [ChatController::class, 'update'])->name('chat.update');
-    Route::delete('/chat/{id}', [ChatController::class, 'destroy'])->name('chat.destroy');
-
-    // Módulo de Historial
-    Route::get('/historial', [HistorialController::class, 'index'])->name('historial.index');
-    Route::post('/historial', [HistorialController::class, 'store'])->name('historial.store');
-    Route::get('/historial/{documento}/edit', [HistorialController::class, 'edit'])->name('historial.edit');
-    Route::put('/historial/{documento}', [HistorialController::class, 'update'])->name('historial.update');
-    Route::delete('/historial/{id}', [HistorialController::class, 'destroy'])->name('historial.destroy');
-
-    // Módulo de Productos
     Route::get('/producto', [ProductoController::class, 'index'])->name('producto.index');
-    Route::post('/producto', [ProductoController::class, 'store'])->name('producto.store');
-    Route::get('/producto/{documento}/edit', [ProductoController::class, 'edit'])->name('producto.edit');
-    Route::put('/producto/{documento}', [ProductoController::class, 'update'])->name('producto.update');
-    Route::delete('/producto/{id}', [ProductoController::class, 'destroy'])->name('producto.destroy');
-
-    // Módulo de Comentarios
-    Route::get('/comentarios', [ComentarioController::class, 'index'])->name('comentarios.index');
-    Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
-    Route::get('/comentarios/{documento}/edit', [ComentarioController::class, 'edit'])->name('comentarios.edit');
-    Route::put('/comentarios/{documento}', [ComentarioController::class, 'update'])->name('comentarios.update');
-    Route::delete('/comentarios/{id}', [ComentarioController::class, 'destroy'])->name('comentarios.destroy');
-
-    // Módulo de Notificaciones
-    Route::get('/notificaciones', [NotificacionesController::class, 'index'])->name('notificaciones.index');
-    Route::post('/notificaciones', [NotificacionesController::class, 'store'])->name('notificaciones.store');
-    Route::get('/notificaciones/{documento}/edit', [NotificacionesController::class, 'edit'])->name('notificaciones.edit');
-    Route::put('/notificaciones/{documento}', [NotificacionesController::class, 'update'])->name('notificaciones.update');
-    Route::delete('/notificaciones/{id}', [NotificacionesController::class, 'destroy'])->name('notificaciones.destroy');
-
-    // Módulo de Preguntas
-    Route::get('/pregunta', [PreguntaController::class, 'index'])->name('pregunta.index');
-    Route::post('/pregunta', [PreguntaController::class, 'store'])->name('pregunta.store');
-    Route::get('/pregunta/{documento}/edit', [PreguntaController::class, 'edit'])->name('pregunta.edit');
-    Route::put('/pregunta/{documento}', [PreguntaController::class, 'update'])->name('pregunta.update');
-    Route::delete('/pregunta/{id}', [PreguntaController::class, 'destroy'])->name('pregunta.destroy');
-
-    // Módulo de Roles
-    Route::get('/roles', [RolesController::class, 'index'])->name('roles.index');
-    Route::post('/roles', [RolesController::class, 'store'])->name('roles.store');
-    Route::get('/roles/{documento}/edit', [RolesController::class, 'edit'])->name('roles.edit');
-    Route::put('/roles/{documento}', [RolesController::class, 'update'])->name('roles.update');
-    Route::delete('/roles/{id}', [RolesController::class, 'destroy'])->name('roles.destroy');
-
-    // Módulo de Tipos de Documento
-    Route::get('/tipo', [TipoController::class, 'index'])->name('tipo.index');
-    Route::post('/tipo', [TipoController::class, 'store'])->name('tipo.store');
-    Route::get('/tipo/{documento}/edit', [TipoController::class, 'edit'])->name('tipo.edit');
-    Route::put('/tipo/{documento}', [TipoController::class, 'update'])->name('tipo.update');
-    Route::delete('/tipo/{id}', [TipoController::class, 'destroy'])->name('tipo.destroy');
-
-    // Módulo de Mensajes
-    Route::get('/mensajes', [MensajesController::class, 'index'])->name('mensajes.index');
-    Route::post('/mensajes', [MensajesController::class, 'store'])->name('mensajes.store');
-    Route::get('/mensajes/{documento}/edit', [MensajesController::class, 'edit'])->name('mensajes.edit');
-    Route::put('/mensajes/{documento}', [MensajesController::class, 'update'])->name('mensajes.update');
-    Route::delete('/mensajes/{id}', [MensajesController::class, 'destroy'])->name('mensajes.destroy');
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/historial', [HistorialController::class, 'index'])->name('historial.index');
+    Route::get('/comentarios-crud', [ComentarioController::class, 'index'])->name('comentarios.crud');
+    Route::get('/notificaciones-crud', [NotificacionesController::class, 'index'])->name('notificaciones.crud');
+    Route::get('/pregunta-crud', [PreguntaController::class, 'index'])->name('pregunta.crud');
+    Route::get('/roles-crud', [RolesController::class, 'index'])->name('roles.crud');
+    Route::get('/tipo-crud', [TipoController::class, 'index'])->name('tipo.crud');
+    Route::get('/mensajes-crud', [MensajesController::class, 'index'])->name('mensajes.crud');
 
 });
 
 // ========================
-// 🔄 RUTAS DE FALLBACK
+// 🧪 RUTA DE DIAGNÓSTICO (TEMPORAL)
 // ========================
+Route::get('/test-vistas', function() {
+    echo "<h1>✅ Vistas Existentes</h1>";
+    
+    $vistas = [
+        'cliente.dashboard' => 'cliente/dashboard.blade.php',
+        'cliente.clienteDashboard' => 'cliente/clienteDashboard.blade.php',
+        'servicio' => 'servicio.blade.php',
+        'producto' => 'producto.blade.php',
+        'chat' => 'chat.blade.php',
+        'usuario' => 'usuario.blade.php',
+        'categoria' => 'categoria.blade.php',
+        'tecnico.dashboard' => 'tecnico/dashboard.blade.php',
+        'admin.dashboard' => 'admin/dashboard.blade.php',
+        'auth.login' => 'auth/login.blade.php',
+        'publico' => 'publico.blade.php',
+    ];
+    
+    foreach ($vistas as $nombre => $archivo) {
+        if (view()->exists($nombre)) {
+            echo "✅ <strong>$nombre</strong> existe ($archivo)<br>";
+        } else {
+            echo "❌ <strong>$nombre</strong> NO existe<br>";
+        }
+    }
+    
+    echo "<h2>📁 Estructura de vistas:</h2>";
+    echo "<pre>";
+    $files = scandir(resource_path('views'));
+    print_r($files);
+    echo "</pre>";
+});
 
+// ========================
+// 🆘 RUTA DE FALLBACK
+// ========================
 Route::fallback(function () {
-    return redirect('/login');
+    return response()->view('errors.404', [], 404);
 });
-
 // ========================
-// ❌ ELIMINAR RUTAS DUPLICADAS
+//  ELIMINAR RUTAS DUPLICADAS
 // ========================
 
-// ❌ COMENTA O ELIMINA ESTAS SECCIONES DUPLICADAS:
+//  COMENTA O ELIMINA ESTAS SECCIONES DUPLICADAS:
 /*
 // Rutas de Recurso para los módulos principales
 // Módulo de Catálogo

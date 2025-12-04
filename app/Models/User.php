@@ -19,6 +19,9 @@ class User extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
     
+    // DESACTIVAR TIMESTAMPS - ESTA ES LA LÍNEA IMPORTANTE
+    public $timestamps = false;
+    
     // Campos que se pueden asignar masivamente
     protected $fillable = [
         'ID_Usuario',
@@ -47,23 +50,67 @@ class User extends Authenticatable
     }
     
     /**
-     * Mutador para hashear la contraseña automáticamente al guardar
+     * Mutador CORREGIDO para hashear la contraseña automáticamente al guardar
      */
     public function setContraseñaAttribute($value)
     {
-        // Solo hashear si no está ya hasheado
-        if (!empty($value) && !Hash::needsRehash($value) && strlen($value) < 60) {
-            $this->attributes['Contraseña'] = Hash::make($value);
-        } else {
-            $this->attributes['Contraseña'] = $value;
+        if (!empty($value)) {
+            // Verificar si ya está hasheada (comienza con $2y$ para bcrypt)
+            $isAlreadyHashed = preg_match('/^\$2y\$/', $value);
+            
+            if (!$isAlreadyHashed) {
+                // Si no está hasheada, hashéala
+                $this->attributes['Contraseña'] = Hash::make($value);
+            } else {
+                // Si ya está hasheada, guardarla tal cual
+                $this->attributes['Contraseña'] = $value;
+            }
         }
     }
     
     /**
-     * Relación con la tabla de roles (si existe)
+     * Verificar si la contraseña está hasheada
      */
-    public function rol()
+    public function isPasswordHashed()
     {
-        return $this->belongsTo(Rol::class, 'Codigo_Rol', 'Codigo_Rol');
+        return preg_match('/^\$2y\$/', $this->Contraseña);
+    }
+    
+    /**
+     * Método para verificar si una contraseña dada es válida
+     */
+    public function checkPassword($plainPassword)
+    {
+        // Si la contraseña en BD está hasheada, usar Hash::check
+        if ($this->isPasswordHashed()) {
+            return Hash::check($plainPassword, $this->Contraseña);
+        }
+        
+        // Si está en texto plano, comparar directamente
+        return $plainPassword === $this->Contraseña;
+    }
+    
+    /**
+     * Verificar si el usuario es técnico
+     */
+    public function isTecnico()
+    {
+        return $this->Codigo_Rol == 1;
+    }
+    
+    /**
+     * Verificar si el usuario es cliente
+     */
+    public function isCliente()
+    {
+        return $this->Codigo_Rol == 2;
+    }
+    
+    /**
+     * Verificar si el usuario es administrador
+     */
+    public function isAdmin()
+    {
+        return $this->Codigo_Rol == 3;
     }
 }

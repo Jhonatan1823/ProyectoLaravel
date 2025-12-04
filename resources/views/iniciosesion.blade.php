@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modulo Inicio</title>
+    <title>Inicia Sesion</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <body style="background-color: #ffffffff;">
+    
 
 <!--Barra de navegacion de arriba-->
 <nav class="navbar navbar-expand-lg" style="background-color: #d20000ff;">
@@ -103,6 +104,9 @@
         <div class="container mt-5">
 <div class="sidebar">
         <div class="p-3">
+            @if(!session()->has('user'))
+            <h5 class="text-white mb-3">Inicie Sesion Para Navegar Por El Sistema</h5>
+            @endif
             <h5 class="text-white mb-3">Módulos</h5>
             <div class="accordion accordion-flush" id="dbAccordion">
 @php
@@ -142,7 +146,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 3)
+@if($rol == 1)
                 {{-- MÓDULO 3: SERVICIOS --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingThree">
@@ -177,7 +181,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 1)
+@if($rol == 3)
                 {{-- MÓDULO 5: GESTIÓN BASE (Usuarios y Roles) --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFive">

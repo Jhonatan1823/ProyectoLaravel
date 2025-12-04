@@ -426,7 +426,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 3)
+@if($rol == 1)
                 {{-- MÓDULO 3: SERVICIOS --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingThree">
@@ -461,7 +461,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 1)
+@if($rol == 3)
                 {{-- MÓDULO 5: GESTIÓN BASE (Usuarios y Roles) --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFive">

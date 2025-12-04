@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\RolesModelo;
 use App\Models\UsuarioModelo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,13 +37,26 @@ class UsuarioController extends Controller
             'Direccion' => 'required',
             'Telefono' => 'required|numeric',
             'Correo' => 'required|email',
-            'Contraseña' => 'required',
+            'Contraseña' => 'required|max:200',
             'Codigo_Rol' => 'required|numeric'
         ],[
             'ID_Usuario.unique' => 'El usuario con este documento ya existe en la plataforma.',
         ]);
 
-        UsuarioModelo::create($request->all());
+        UsuarioModelo::create([
+            'ID_Usuario' => $request->ID_Usuario,
+            'Codigo_Documento' => $request->Codigo_Documento,
+            'Nombre' => $request->Nombre,
+            'Fecha_Nacimiento' => $request->Fecha_Nacimiento,
+            'Direccion' => $request->Direccion,
+            'Telefono' => $request->Telefono,
+            'Correo' => $request->Correo,
+            'Contraseña' =>Hash::make($request->Contraseña),
+            'Codigo_Rol' => $request->Codigo_Rol
+
+        ]);
+       
+       
         return redirect()->route('usuario.index')->with('success','Usuario Registrado en la Plataforma');
     }
 
@@ -56,7 +70,7 @@ class UsuarioController extends Controller
             'Direccion' => 'required',
             'Telefono' => 'required|numeric',
             'Correo' => 'required|email',
-            'Contraseña' => 'required',
+            'Contraseña' => 'required|max:200',
             'Codigo_Rol' => 'required|numeric'
         ],[
             'ID_Usuario.unique' => 'El usuario con este documento ya existe en la plataforma.',

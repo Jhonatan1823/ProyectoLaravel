@@ -65,8 +65,8 @@
         <label class="form-label">Tipo de Documento</label>
         <select type="number" class="form-select" aria-label="Default select example"  id="Codigo_Documento" name="Codigo_Documento" required>
             <option selected style="color:rgb(100,100,100)">[Seleccione un Documento]</option>
-            <option value="2">Cedula de Ciudadania</option>
             <option value="1">Tarjeta de Identidad</option>
+            <option value="2">Cedula de Ciudadania</option>
             <option value="3">Cedula de Extranjeria</option>
             <option value="4">Pasaporte</option>
             <option value="5">PEP</option>

@@ -276,8 +276,8 @@
                             <div class="mb-3">
                                 <label for="editCodigo_Documento" class="form-label">Tipo Documento</label>
                                 <select class="form-select" id="editCodigo_Documento" name="Codigo_Documento" required>
-                                    <option value="2">Cedula de Ciudadania</option>
-                                    <option value="1">Tarjeta de Identidad</option>
+                                    <option value="1">Cedula de Ciudadania</option>
+                                    <option value="2">Tarjeta de Identidad</option>
                                     <option value="3">Pasaporte</option>
                                     <option value="4">NIT</option>
                                     <option value="5">PEP</option>

@@ -14,7 +14,7 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\TipoController;
 use App\Http\Controllers\MensajesController;
 use App\Http\Middleware\checKAuth;
-use App\Http\Controllers\AuntenticarController;
+use App\Http\Controllers\AutenticarController;
 
 
 
@@ -42,7 +42,11 @@ Route::get('/index', function(){return view('index');})->name("index");
 
 Route::get('/protochat', function(){return view('protochat');})->name("protochat");
 
-
+Route::get('/usuario',[UsuarioController::class,"index"])->name("usuario.index");   
+Route::post('/usuario',[UsuarioController::class,"store"])->name("usuario.store");
+Route::get('/usuario/{documento}/edit', [UsuarioController::class, 'edit'])->name('usuario.edit');
+Route::put('/usuario/{documento}', [UsuarioController::class, 'update'])->name('usuario.update');
+Route::delete('/usuario/{id}', [UsuarioController::class, 'destroy'])->name('usuario.destroy');
 
 Route::get('/producto',[ProductoController::class,"index"])->name("producto.index");
 Route::post('/producto',[ProductoController::class,"store"])->name("producto.store");   
@@ -136,15 +140,11 @@ Route::resource('documento', TipoController::class)->names('documento');
 
 
 //Rotas inicio sesion y cierre 
-Route::get('/iniciosesion',[AuntenticarController::class, 'showlogin'])->name('iniciosesion');
-Route::post('/iniciosesion', [AuntenticarController::class, 'authenticate'])->name('iniciosesion.post');
-Route::post('/cerarsesion', [AuntenticarController::class, 'logout'])->name('logout');
+Route::get('/iniciosesion',[AutenticarController::class, 'showlogin'])->name('iniciosesion');
+Route::post('/iniciosesion', [AutenticarController::class, 'authenticate'])->name('iniciosesion.post');
+Route::post('/cerarsesion', [AutenticarController::class, 'logout'])->name('logout');
 
-Route::get('/usuario',[UsuarioController::class,"index"])->name("usuario.index");   
-Route::post('/usuario',[UsuarioController::class,"store"])->name("usuario.store");
-Route::get('/usuario/{documento}/edit', [UsuarioController::class, 'edit'])->name('usuario.edit');
-Route::put('/usuario/{documento}', [UsuarioController::class, 'update'])->name('usuario.update');
-Route::delete('/usuario/{id}', [UsuarioController::class, 'destroy'])->name('usuario.destroy');
+
 
 Route::get('/', function () {
 return view('welcome');

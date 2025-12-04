@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\UsuarioModelo;
 use Illuminate\Support\Facades\Hash;
 
-class AuntenticarController extends Controller
+class AutenticarController extends Controller
 {
     public function showLogin()
     {

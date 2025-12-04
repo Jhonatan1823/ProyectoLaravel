@@ -253,7 +253,7 @@
                 var idusuario = button.getAttribute('data-idusuario');
 
                 // Llenar campos del modal de edición
-                document.getElementById('editID_Comentario').value = codigo;
+                editIDdocument.getElementById('_Comentario').value = codigo;
                 document.getElementById('editComentario').value = comentario;
                 document.getElementById('editID_Usuario').value = idusuario;
                 

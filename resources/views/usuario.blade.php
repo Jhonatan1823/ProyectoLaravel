@@ -308,11 +308,11 @@
                                 <input type="text" class="form-control" id="editContraseña" name="Contraseña" required>
                             </div>
                             <div class="mb-3">
-                                <label for="editCodigo_Rol" class="form-label">Tipo Documento</label>
+                                <label for="editCodigo_Rol" class="form-label">Codigo_Rol</label>
                                 <select class="form-select" id="editCodigo_Rol" name="Codigo_Rol" required>
-                                    <option value="1">Cedula de Ciudadania</option>
-                                    <option value="2">Tarjeta de Identidad</option>
-                                    <option value="3">Pasaporte</option>
+                                    <option value="1">Administrador</option>
+                                    <option value="2">Cliente</option>
+                                    <option value="3">Tecnico</option>
                                 </select>
                             </div>
                             <div class="modal-footer">

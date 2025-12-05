@@ -41,6 +41,7 @@ Route::get('/index', function(){return view('index');})->name("index");
 
 Route::get('/protochat', function(){return view('protochat');})->name("protochat");
 
+Route::get('/adminservicio', function(){return view('adminservicio');})->name("adminservicio");
 
 Route::get('/usuario',[UsuarioController::class,"index"])->name("usuario.index");
 Route::post('/usuario',[UsuarioController::class,"store"])->name("usuario.store");

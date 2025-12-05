@@ -171,27 +171,27 @@ Route::middleware(['auth'])->group(function () {
         // Módulo de Usuarios - USA VISTA USUARIO.BLADE.PHP EXISTENTE
         Route::get('/usuarios', function(){ 
             return view('usuario'); // Vista existente en raíz
-        })->name('usuarios.index');
+        })->name('admin.usuarios.index');
         
         // Módulo de Categorías - USA VISTA CATEGORIA.BLADE.PHP EXISTENTE
         Route::get('/categorias', function(){ 
             return view('categoria'); // Vista existente en raíz
-        })->name('categorias.index');
+        })->name('admin.categorias.index');
         
         // Módulo de Productos - USA VISTA PRODUCTO.BLADE.PHP EXISTENTE
         Route::get('/productos', function(){ 
             return view('producto'); // Vista existente en raíz
-        })->name('productos.index');
+        })->name('admin.productos.index');
         
         // Módulo de Roles - USA VISTA ROLES.BLADE.PHP EXISTENTE
         Route::get('/roles', function(){ 
             return view('roles'); // Vista existente en raíz
-        })->name('roles.index');
+        })->name('admin.roles.index');
         
         // Módulo de Tipos de Documento - USA VISTA TIPO.BLADE.PHP EXISTENTE
         Route::get('/tipos-documento', function(){ 
             return view('tipo'); // Vista existente en raíz
-        })->name('tipos.index');
+        })->name('admin.tipos.index');
     });
 
     // ========================
@@ -288,37 +288,3 @@ Route::get('/test-vistas', function() {
     echo "</pre>";
 });
 
-// ========================
-// 🆘 RUTA DE FALLBACK
-// ========================
-Route::fallback(function () {
-    return response()->view('errors.404', [], 404);
-});
-// ========================
-//  ELIMINAR RUTAS DUPLICADAS
-// ========================
-
-//  COMENTA O ELIMINA ESTAS SECCIONES DUPLICADAS:
-/*
-// Rutas de Recurso para los módulos principales
-// Módulo de Catálogo
-Route::resource('producto', ProductoController::class);
-Route::resource('categoria', CategoriaController::class);
-
-// Módulo de Interacción  
-Route::resource('pregunta', PreguntaController::class);
-
-// Módulo de Servicios
-Route::resource('servicio', ServicioController::class);
-Route::resource('historial', HistorialController::class);
-
-// Módulo de Comunicación
-Route::resource('chat', ChatController::class);
-Route::resource('mensajes', MensajesController::class);
-Route::resource('notificaciones', NotificacionesController::class);
-
-// Módulo de Gestión de Base
-Route::resource('usuario', UsuarioController::class);
-Route::resource('roles', RolesController::class);
-Route::resource('documento', TipoController::class)->names('documento');
-*/

@@ -20,7 +20,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <h1 style="color: white;">Celuaccel</h1>
+        <a  href="{{ route('welcome') }}"><h1 class="navbar-brand" style="color: white;">Celuaccel</h1></a>
       </div>
       <div class="ms-auto">
         <form method="POST" action="{{ route('logout') }}">
@@ -316,11 +316,11 @@
                                 <input type="text" class="form-control" id="editContraseña" name="Contraseña" required>
                             </div>
                             <div class="mb-3">
-                                <label for="editCodigo_Rol" class="form-label">Tipo Documento</label>
+                                <label for="editCodigo_Rol" class="form-label">Rol</label>
                                 <select class="form-select" id="editCodigo_Rol" name="Codigo_Rol" required>
-                                    <option value="1">Cedula de Ciudadania</option>
-                                    <option value="2">Tarjeta de Identidad</option>
-                                    <option value="3">Pasaporte</option>
+                                    <option value="1">Tecnico</option>
+                                    <option value="2">Cliente</option>
+                                    <option value="3">Administrador</option>
                                 </select>
                             </div>
                             <div class="modal-footer">
@@ -477,8 +477,8 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-@endif               
+@endif
             </div>
         </div>
-</div> 
+</div>
 

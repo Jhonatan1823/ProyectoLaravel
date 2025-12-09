@@ -22,7 +22,7 @@
     }
     
     .card {
-      max-width: 400px;
+      max-width: 700px;
       width: 100%;
       background: white;
       border-radius: 10px;
@@ -199,37 +199,66 @@
           </div>
         @endif
 
-<form id="loginForm" method="POST" action="{{ route('iniciosesion.post') }}">
+<form id="registerForm" action="{{ route('registro.store') }}" method="POST">
     @csrf
     
     <div class="form-group">
+        <label for="ID_Usuario">Documento</label>
+        <input type="text" id="ID_Usuario" name="ID_Usuario" placeholder="Documento" required>
+    </div>
+
+    <div class="form-group">
         <label for="Codigo_Documento">Tipo de Documento</label>
         <select id="Codigo_Documento" name="Codigo_Documento" required>
-            <option selected style="color:rgb(100,100,100)">[Seleccione un Documento]</option>
+            <option selected style="color:rgb(100,100,100)">[ Seleccione el Tipo de Documento ]</option>
             <option value="2">Cédula de Ciudadanía</option>
             <option value="1">Tarjeta de Identidad</option>
-            <option value="3">Cédula de Extranjería</option>
-            <option value="4">Pasaporte</option>
+            <option value="3">Pasaporte</option>
+            <option value="4">NIT</option>
             <option value="5">PEP</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label for="ID_Usuario">Número de Documento</label>
-        <input type="text" id="ID_Usuario" name="ID_Usuario" placeholder="Documento" required>
+        <label for="Nombre">Nombre Completo</label>
+        <input type="text" id="Nombre" name="Nombre" placeholder="Nombre" required>
+    </div>
+
+    <div class="form-group">
+        <label for="Fecha_Nacimiento">Fecha de Nacimiento</label>
+        <input type="date" id="Fecha_Nacimiento" name="Fecha_Nacimiento" required>
+    </div>
+
+    <div class="form-group">
+        <label for="Direccion">Dirección</label>
+        <input type="text" id="Direccion" name="Direccion" placeholder="Calle # ###-#" required>
+    </div>
+
+    <div class="form-group">
+        <label for="Telefono">Teléfono</label>
+        <input type="number" id="Telefono" name="Telefono" placeholder="#####" required>
+    </div>
+
+    <div class="form-group">
+        <label for="Correo">Correo Electrónico</label>
+        <input type="email" id="Correo" name="Correo" placeholder="ejemplo@correo.com" required>
     </div>
 
     <div class="form-group">
         <label for="Contraseña">Contraseña</label>
-        <input type="password" id="Contraseña" name="Contraseña" placeholder="Contraseña" required>
+        <input type="password" id="Contraseña" name="Contraseña" placeholder="***" required>
+    </div>
+    <div class="form-group">
+        <label for="ConfirmarContraseña">Confirmar Contraseña</label>
+        <input type="password" id="ConfirmarContraseña" name="ConfirmarContraseña" placeholder="***" required>
     </div>
 
-    <button id="loginBtn" type="submit" class="btn-login">Enviar</button>
-</form>
 
-        <div class="register-link">
-          <p>¿No tienes cuenta? <a  href="{{ route('registro.create') }}">Regístrate aquí</a></p>
-        </div>
+    <!-- Rol fijo oculto -->
+    <input type="hidden" name="Codigo_Rol" value="2">
+
+    <button id="registerBtn" type="submit" class="btn-login">Registrarse</button>
+</form>
       </main>
     </div>
  </div>
@@ -248,6 +277,17 @@
     });
 
     document.getElementById('Codigo_Documento').value = '2';
+
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+    const pass = document.getElementById('Contraseña').value;
+    const confirmPass = document.getElementById('ConfirmarContraseña').value;
+
+    if (pass !== confirmPass) {
+        e.preventDefault(); // Evita que se envíe el formulario
+        alert('Las contraseñas no coinciden. Por favor, verifica.');
+    }
+});
+
   </script>
 </body>
 </html>

@@ -22,7 +22,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <h1 style="color: white;">Celuaccel</h1>
+        <a  href="{{ route('welcome') }}"><h1 class="navbar-brand" style="color: white;">Celuaccel</h1></a>
       </div>
       <div class="ms-auto">
         <form method="POST" action="{{ route('logout') }}">

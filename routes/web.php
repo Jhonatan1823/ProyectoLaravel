@@ -15,7 +15,7 @@ use App\Http\Controllers\TipoController;
 use App\Http\Controllers\MensajesController;
 use App\Http\Controllers\AutenticarController;
 use App\Http\Middleware\ChecKAuth;
-
+use App\Http\Controllers\RegistroController;
 
 
 use App\Models\CategoriaModelo;
@@ -42,6 +42,7 @@ Route::get('/index', function(){return view('index');})->name("index");
 Route::get('/protochat', function(){return view('protochat');})->name("protochat");
 
 Route::get('/adminservicio', function(){return view('adminservicio');})->name("adminservicio");
+
 
 Route::get('/usuario',[UsuarioController::class,"index"])->name("usuario.index");
 Route::post('/usuario',[UsuarioController::class,"store"])->name("usuario.store");
@@ -125,7 +126,7 @@ Route::resource('categoria', CategoriaController::class);
 
 // Módulo de Interacción
 Route::resource('pregunta', PreguntaController::class);
-Route::resource('comentarios', ComentariosController::class);
+Route::resource('comentarios', ComentarioController::class);
 
 // Módulo de Servicios
 Route::resource('servicio', ServicioController::class);
@@ -144,11 +145,19 @@ Route::resource('usuario', UsuarioController::class);
 });
 
 
-Route::get('/inciosesion',[AutenticarController::class, 'showlogin'])->name('iniciosesion');
+
+// Registro público
+Route::get('/registro', [RegistroController::class, 'create'])->name('registro.create');
+Route::post('/registro', [RegistroController::class, 'store'])->name('registro.store');
+Route::get('/iniciosesion',[AutenticarController::class, 'showlogin'])->name('iniciosesion');
 Route::post('/inciosesion',[AutenticarController::class, 'authenticate'])->name('iniciosesion.post');
 Route::post('/iniciosesion',[AutenticarController::class, 'logout'])->name('logout');
 
+
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
+
+
+Route::get('/nose', function(){return view('nose');})->name("nose");
 

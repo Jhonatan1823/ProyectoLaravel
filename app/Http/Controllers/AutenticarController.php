@@ -46,7 +46,7 @@ class AutenticarController extends Controller
     }
 
     /*CERRAR SESION*/
-    public function logout (Rsquest $request)
+    public function logout (Request $request)
     {
         /* limpiar todos los datos de la sesion*/
         $request ->session()->forget('user');

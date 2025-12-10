@@ -3,12 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración de Servicios</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <title>Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        /* Estilos del proto chat */
+        .chat-box {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .chat-message {
+            margin-bottom: 10px;
+        }
+        .chat-message.user {
+            text-align: right;
+            color: #0d6efd;
+        }
+        .chat-message.bot {
+            text-align: left;
+            color: #198754;
+        }
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+        .chat-input input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+        }
+        .chat-input button {
+            border: none;
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px 15px;
+        }
+    </style>
+</head>
 <body style="background-color: #ffffffff;">
-   <!--Barra de navegacion de arriba-->
+
+<!--Barra de navegacion de arriba-->
 <nav class="navbar navbar-expand-lg" style="background-color: #d20000ff;">
   <div class="container-fluid">
     <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" style="outline: none; box-shadow: none; border-color: transparent; background-color: #1c1c1cff">
@@ -33,24 +80,49 @@
   </div>
 </nav>
 
-<h2>Mis Servicios Asignados</h2>
 <center>
-<div class="card" style="width:400px;">
-  <div class="card-header" style="background-color:red;color:white;font-weight:bold;">
-    iPhone X
+  <!-- Proto Chat -->
+  <div class="chat-box mt-4">
+      <div class="chat-messages" id="chatMessages">
+          <div class="chat-message bot">Hola 👋, ¿en qué puedo ayudarte?</div>
+      </div>
+      <div class="chat-input">
+          <input type="text" id="chatInput" placeholder="Escribe un mensaje...">
+          <button onclick="sendMessage()">Enviar</button>
+      </div>
   </div>
-  <div class="card-body">
-    <h6 class="card-text" style="font-weight: bold;">ID del Servicio: </h6><h6>dato</h6><br>
-    <h6 class="card-text" style="font-weight: bold;">Cliente: </h6><h6>dato</h6><br>
-    <h6 class="card-text" style="font-weight: bold;">Descripción: </h6><h6>dato</h6><br>
-    <h6 class="card-text" style="font-weight: bold;">Estado: </h6><h6>dato</h6><br>
-    <a href="#" class="btn btn-primary" style="background-color:red;font-weight: bold;">Ver Detalles</a>
-  </div>
-</div>
 </center>
+
+<script>
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const messages = document.getElementById('chatMessages');
+        const text = input.value.trim();
+
+        if(text !== "") {
+            // Mensaje del usuario
+            const userMsg = document.createElement('div');
+            userMsg.classList.add('chat-message', 'user');
+            userMsg.textContent = text;
+            messages.appendChild(userMsg);
+
+            // Respuesta simulada del bot
+            const botMsg = document.createElement('div');
+            botMsg.classList.add('chat-message', 'bot');
+            botMsg.textContent = "Recibí tu mensaje: " + text;
+            messages.appendChild(botMsg);
+
+            // Scroll automático
+            messages.scrollTop = messages.scrollHeight;
+
+            // Limpiar input
+            input.value = "";
+        }
+    }
+</script>
+
 </body>
 </html>
-
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="background-color:#1c1c1cff">
   <div class="offcanvas-header">
@@ -63,7 +135,7 @@
         <div class="container mt-5">
 <div class="sidebar">
         <div class="p-3">
-            <h5 class="text-white mb-3">Módulos</h5>
+            <h5 class="text-white mb-3">Módulos DB</h5>
             <div class="accordion accordion-flush" id="dbAccordion">
 @php
 $rol = session('user.Codigo_Rol');
@@ -157,5 +229,4 @@ $rol = session('user.Codigo_Rol');
             </div>
         </div>
 </div> 
-
 

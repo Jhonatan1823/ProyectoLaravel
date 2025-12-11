@@ -213,10 +213,18 @@
                         <label for="Descripcion" class="form-label">Descripcion</label>
                         <input type="text" class="form-control" id="Descripcion" name="Descripcion" placeholder="Digite la Descripcion" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="ID_Usuario" class="form-label">Documento del Usuario</label>
-                        <input type="text" class="form-control" id="ID_Usuario" name="ID_Usuario" placeholder="Digite el documento" required>
-                    </div>
+                        <div class="mb-3">
+                            <label for="ID_Usuario" class="form-label">Documento del Usuario</label>
+                            <select class="form-control" id="ID_Usuario" name="ID_Usuario" required>
+                                <option value="">Seleccione un usuario</option>
+
+                                @foreach ($usuarios as $usuario)
+                                    <option value="{{ $usuario->ID_Usuario }}">
+                                        {{ $usuario->ID_Usuario }} - {{ $usuario->Nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     <div class="mb-3">
                         <label for="Precio" class="form-label">Precio</label>
                         <input type="number" class="form-control" id="Precio" name="Precio" placeholder="Digite el Precio" required>

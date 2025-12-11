@@ -355,7 +355,7 @@
     </div>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a  href="{{ route('welcome') }}"><h1 class="navbar-brand" style="color: white;">Celuaccel</h1></a>
+        <a  href="{{ route('welcome') }}" style="text-decoration:none"><h1 class="navbar-brand" style="color: white;">Celuaccel</h1></a>
       </div>            
       <a href="#inicio" class="nav-link">Inicio</a>
             <a href="#servicios" class="nav-link">Servicios</a>
@@ -532,12 +532,18 @@
         <div class="container mt-5">
 <div class="sidebar">
         <div class="p-3">
+            @if(!session()->has('user'))
             <h5 class="text-white mb-3">Inicia Sesion Para Navegar por el Sistema</h5>
             <div class="accordion accordion-flush" id="dbAccordion">
+            @endif
+            @if(session()->has('user'))
+            <h5 class="text-white mb-3">Modulos</h5>
+            <div class="accordion accordion-flush" id="dbAccordion">
+
 @php
 $rol = session('user.Codigo_Rol');
 @endphp
-@if($rol == 2)
+@if($rol == 2 or 3)
                 {{-- MÓDULO 1: CATÁLOGO --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingOne">
@@ -554,7 +560,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 2)
+@if($rol == 2 or 3)
                 {{-- MÓDULO 2: INTERACCIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingTwo">
@@ -571,7 +577,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 1)
+@if($rol == 1 or 3)
                 {{-- MÓDULO 3: SERVICIOS --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingThree">
@@ -589,7 +595,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 2)
+@if($rol == 2 or 3)
                 {{-- MÓDULO 4: COMUNICACIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFour">
@@ -608,7 +614,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 3)
+@if($rol == 3 or 3)
                 {{-- MÓDULO 5: GESTIÓN BASE (Usuarios y Roles) --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFive">
@@ -624,7 +630,8 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-@endif               
+@endif                           
+@endif
             </div>
         </div>
 </div>

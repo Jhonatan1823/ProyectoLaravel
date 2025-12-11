@@ -4,25 +4,31 @@ namespace App\Http\Controllers;
 use App\Models\ServicioModelo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+ use App\Models\UsuarioModelo;
 class ServicioController extends Controller
 {
+    
+
     //Buscar y Paginar
-    public function index(Request $request)
-    {
-        $search = $request->input('search');
-        $query = DB::table('servicio');
+    
+public function index(Request $request)
+{
+    $search = $request->input('search');
+    $query = DB::table('servicio');
 
-        if($search){
-            $query->where(function($q) use ($search){
-                $q->where('ID_Servicio', 'LIKE', "%{$search}%")
-                ->orwhere('Movil_Nombre', 'LIKE', "%{$search}%");
-
-            });
-        }
-        $datos = $query->paginate(10);
-        return view("servicio")->with("datos", $datos);
+    if($search){
+        $query->where(function($q) use ($search){
+            $q->where('ID_Servicio', 'LIKE', "%{$search}%")
+              ->orWhere('Movil_Nombre', 'LIKE', "%{$search}%");
+        });
     }
+
+    $datos = $query->paginate(10);
+
+    $usuarios = \App\Models\UsuarioModelo::select('ID_Usuario', 'Nombre')->get();
+
+    return view("servicio", compact('datos', 'usuarios'));
+}
 
     //Insertar Datos
     public function store(Request $request){

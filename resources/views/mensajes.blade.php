@@ -38,6 +38,9 @@
         <div class="card">
             <div class="card-body" style="width: 1200px;">
                 <h3>Modulo Mensajes</h3>
+                @if(isset($codigoChat))
+                    Chat Seleccionado {{$codigoChat}}
+                @endif
                 <hr>
                 {{-- Mensaje de éxito --}}
                     @if (session('success'))
@@ -331,7 +334,7 @@ editarModal.addEventListener('show.bs.modal', function (event) {
 @php
 $rol = session('user.Codigo_Rol');
 @endphp
-@if($rol == 2)
+@if($rol == 2 or 3)
                 {{-- MÓDULO 1: CATÁLOGO --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingOne">
@@ -348,7 +351,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 2)
+@if($rol == 2 or 3)
                 {{-- MÓDULO 2: INTERACCIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingTwo">
@@ -365,7 +368,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 1)
+@if($rol == 1 or 3)
                 {{-- MÓDULO 3: SERVICIOS --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingThree">
@@ -382,7 +385,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 2)
+@if($rol == 2 or 3)
                 {{-- MÓDULO 4: COMUNICACIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFour">
@@ -393,6 +396,7 @@ $rol = session('user.Codigo_Rol');
                     <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#dbAccordion">
                         <div class="list-group list-group-flush">
                             <a href="{{ route('chat.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Chat</a>
+                            <a href="{{ route('protochat') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Simulación Chat</a>
                             <a href="{{ route('mensajes.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-paper-plane me-2"></i> Mensajes</a>
                             <a href="{{ route('notificaciones.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i> Notificaciones</a>
                         </div>

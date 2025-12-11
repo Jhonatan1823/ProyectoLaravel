@@ -255,7 +255,7 @@
 
 
     <!-- Rol fijo oculto -->
-    <input type="hidden" name="Codigo_Rol" value="2">
+    <input type="hidden" name="Codigo_Rol" value="1">
 
     <button id="registerBtn" type="submit" class="btn-login">Registrarse</button>
 </form>

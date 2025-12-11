@@ -65,7 +65,9 @@
                 {{-- Formulario de Búsqueda y Botón Nuevo --}}
                 <form action="{{ route('producto.index') }}" method="GET">
                     <div class="text-end mb-3">
+                        @if ($userRole == 1 || $userRole == 2)
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AgregarModal"><i class="fa-solid fa-plus"></i> Nuevo Producto</button>
+                        @endif
                     </div>
                     <div class="row g-2 align-items-center">
                         <div class="col-md-6">
@@ -362,7 +364,7 @@
 @php
 $rol = session('user.Codigo_Rol');
 @endphp
-@if($rol == 2)
+@if($rol == 2 || $rol == 3 || $rol == 1)
                 {{-- MÓDULO 1: CATÁLOGO --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingOne">
@@ -379,7 +381,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 2)
+@if($rol == 2 || $rol == 3 || $rol == 1)
                 {{-- MÓDULO 2: INTERACCIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingTwo">
@@ -396,7 +398,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 1)
+@if($rol == 1 || $rol == 3)
                 {{-- MÓDULO 3: SERVICIOS --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingThree">
@@ -413,7 +415,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 2)
+@if($rol == 2 || $rol == 3 || $rol == 1)
                 {{-- MÓDULO 4: COMUNICACIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFour">
@@ -431,7 +433,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 3)
+@if($rol == 1)
                 {{-- MÓDULO 5: GESTIÓN BASE (Usuarios y Roles) --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFive">

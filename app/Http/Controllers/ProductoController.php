@@ -18,15 +18,31 @@ class ProductoController extends Controller
                 $q->where('Codigo_Producto', 'LIKE', "%{$search}%")
                 ->orwhere('Nombre', 'LIKE', "%{$search}%")
                 ->orwhere('Descripcion','LIKE',"%{$search}%");
-            
-        });
+            });
         }
+        
+        // Obtener el rol del usuario de la sesión
+        $usersesion = $request->session()->get('user');
+        $userRole = $usersesion['Codigo_Rol'] ?? null;
+        
         $datos = $query->paginate(10);
-        return view("producto")->with("datos", $datos);
+        
+        return view("producto")
+            ->with("datos", $datos)
+            ->with('userRole', $userRole);
     }
 
     //Insertar Datos
     public function store(Request $request){
+        // Verificar que solo admin (rol 3) puedan crear
+        $usersesion = $request->session()->get('user');
+        $userRole = $usersesion['Codigo_Rol'] ?? null;
+        
+        if($userRole = 1 || $userRole = 2){
+            return redirect()->route('producto.index')
+                ->with('error', 'No tienes permisos para crear productos');
+        }
+        
         $request->validate([
             'Codigo_Producto' => 'required|unique:producto,Codigo_Producto',
             'Cantidad' => 'required|numeric',
@@ -37,17 +53,26 @@ class ProductoController extends Controller
             'Activo_Catalogo' => 'required',
             'ID_Categoria' => 'required'
         ],[
-            'Codigo_Producto.unique' => 'El Producto con esta descripcion ya existe en la plataforma.',
+            'Codigo_Producto.unique' => 'El Producto con esta descripción ya existe en la plataforma.',
         ]);
 
         ProductoModelo::create($request->all());
-        return redirect()->route('producto.index')->with('success','Producto Registrado en la Plataforma');
+        return redirect()->route('producto.index')
+            ->with('success','Producto Registrado en la Plataforma');
     }
 
-    //Udate
-    public function update(Request $request, $ID_Categoria){
+    //Update
+    public function update(Request $request, $Codigo_Producto){
+        // Verificar que solo admin (rol 3) pueda editar
+        $usersesion = $request->session()->get('user');
+        $userRole = $usersesion['Codigo_Rol'] ?? null;
+        
+        if($userRole = 2 || $userRole = 1){
+            return redirect()->route('producto.index')
+                ->with('error', 'No tienes permisos para editar productos');
+        }
+        
         $request->validate([
-            'Codigo_Producto' => 'required|unique:producto,Codigo_Producto,'. $ID_Categoria . ',Codigo_Producto',
             'Cantidad' => 'required|numeric',
             'Nombre' => 'required',
             'Precio' => 'required|numeric',
@@ -55,29 +80,40 @@ class ProductoController extends Controller
             'Imagen' => 'required',
             'Activo_Catalogo' => 'required',
             'ID_Categoria' => 'required'
-        ],[
-            'Codigo_Producto.unique' => 'El Producto con esta descripcion ya existe en la plataforma.',
         ]);
-        $producto = ProductoModelo::findOrFail($ID_Categoria);
+        
+        $producto = ProductoModelo::findOrFail($Codigo_Producto);
         $producto->update([
-            'Codigo_Producto' => $request->Codigo_Producto,
             'Cantidad' => $request->Cantidad,
             'Nombre' => $request->Nombre,
             'Descripcion' => $request->Descripcion,
             'Imagen' => $request->Imagen,
             'Precio' => $request->Precio,
             'Activo_Catalogo' => $request->Activo_Catalogo,
-            'ID_Catalogo' => $request->ID_Catalogo,
+            'ID_Categoria' => $request->ID_Categoria,
         ]);
-           return redirect()->route('producto.index')->with('success','Producto Actualizado en la Plataforma');
-
+        
+        return redirect()->route('producto.index')
+            ->with('success','Producto Actualizado en la Plataforma');
     }
+    
     // Eliminar
-public function destroy($id)
-{
-    $producto = ProductoModelo::findOrFail($id);
-    $producto->delete();
+    public function destroy(Request $request, $id)
+    {
+        // Verificar que solo admin (rol 3) pueda eliminar
+        $usersesion = $request->session()->get('user');
+        $userRole = $usersesion['Codigo_Rol'] ?? null;
+        
+        if($userRole = 2 || $userRole = 1){
+            return redirect()->route('producto.index')
+                ->with('error', 'No tienes permisos para eliminar productos');
+        }
+        
+        $producto = ProductoModelo::findOrFail($id);
+        $producto->delete();
 
-    return redirect()->route('producto.index')->with('success', 'Producto eliminado correctamente');
+        return redirect()->route('producto.index')
+            ->with('success', 'Producto eliminado correctamente');
+    }
 }
-}
+

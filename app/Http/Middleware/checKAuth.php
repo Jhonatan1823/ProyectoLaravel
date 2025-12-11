@@ -40,6 +40,17 @@ class ChecKAuth
                 'usuario', 'usuario/*',
                 'roles', 'roles/*',
                 'tipo', 'tipo/*',
+                'servicio', 'servicio/*', 
+                'adminservicio', 'adminservicio/*',
+                'historial', 'historial/*',
+                'producto', 'producto/*',
+                'categoria', 'categoria/*',
+                'pregunta', 'pregunta/*',
+                'comentarios', 'comentarios/*',
+                'chat', 'chat/*',
+                'protochat', 'protochat/*',
+                'mensajes', 'mensajes/*',
+                'notificaciones', 'notificaciones/*',
             ],
             2 => [
                 '/', // RUTA RAÍZ (Welcome page o base)

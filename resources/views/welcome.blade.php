@@ -537,7 +537,7 @@
 @php
 $rol = session('user.Codigo_Rol');
 @endphp
-@if($rol == 2)
+@if($rol == 2 || $rol == 3 ||)
                 {{-- MÓDULO 1: CATÁLOGO --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingOne">

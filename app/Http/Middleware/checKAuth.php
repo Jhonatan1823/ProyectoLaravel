@@ -33,6 +33,12 @@ class ChecKAuth
                 'servicio', 'servicio/*', 
                 'adminservicio', 'adminservicio/*',
                 'historial', 'historial/*',
+                'producto', 'producto/*',
+                'pregunta', 'pregunta/*',
+                'comentarios', 'comentarios/*',
+                'chat', 'chat/*',
+                'protochat', 'protochat/*',
+                'mensajes', 'mensajes/*',
             ],
             3 => [
                 '/', // RUTA RAÍZ (Welcome page o base)
@@ -62,7 +68,6 @@ class ChecKAuth
                 'chat', 'chat/*',
                 'protochat', 'protochat/*',
                 'mensajes', 'mensajes/*',
-                'notificaciones', 'notificaciones/*',
             ],
         ];
 

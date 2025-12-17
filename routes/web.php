@@ -16,6 +16,7 @@ use App\Http\Controllers\MensajesController;
 use App\Http\Controllers\AutenticarController;
 use App\Http\Middleware\ChecKAuth;
 use App\Http\Controllers\RegistroController;
+use App\Http\Controllers\PerfilController;
 
 
 use App\Models\CategoriaModelo;
@@ -105,6 +106,7 @@ Route::post('/mensajes',[MensajesController::class,"store"])->name("mensajes.sto
 Route::get('/mensajes/{documento}/edit', [MensajesController::class, 'edit'])->name('mensajes.edit');
 Route::put('/mensajes/{documento}', [MensajesController::class, 'update'])->name('mensajes.update');
 Route::delete('/mensajes/{id}', [MensajesController::class, 'destroy'])->name('mensajes.destroy');
+Route::get('chat/mensajes/{id}', [MensajesController::class, 'porChat'])->name('mensajes.porChat');
 
 Route::get('/pregunta',[PreguntaController::class,"index"])->name("pregunta.index");
 Route::post('/pregunta',[PreguntaController::class,"store"])->name("pregunta.store");
@@ -117,6 +119,10 @@ Route::post('/tipo',[TipoController::class,"store"])->name("tipo.store");
 Route::get('/tipo/{documento}/edit', [TipoController::class, 'edit'])->name('tipo.edit');
 Route::put('/tipo/{documento}', [TipoController::class, 'update'])->name('tipo.update');
 Route::delete('/tipo/{id}', [TipoController::class, 'destroy'])->name('tipo.destroy');
+
+// Perfil personal del usuario autenticado
+Route::get('/perfil', [PerfilController::class, 'edit'])->name('perfil.edit');
+Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
 
 
 // Rutas de Recurso para los módulos principales
@@ -142,6 +148,9 @@ Route::resource('notificaciones', NotificacionesController::class);
 Route::resource('roles', RolesController::class);
 Route::resource('documento', TipoController::class)->names('documento');
 Route::resource('usuario', UsuarioController::class);
+
+// Modulo Usuario
+Route::get('/perfil', [PerfilController::class, 'edit'])->name('perfil');
 });
 
 

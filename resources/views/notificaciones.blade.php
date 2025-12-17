@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
+    @php
+$rol = session('user.Codigo_Rol');
+@endphp
 <!--Barra de navegacion de arriba-->
 <nav class="navbar navbar-expand-lg" style="background-color: #d20000ff;">
   <div class="container-fluid">
@@ -21,8 +24,11 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a  href="{{ route('welcome') }}"><h1 class="navbar-brand" style="color: white;">Celuaccel</h1></a>
-      </div>
+        <a  href="{{ route('welcome') }}" style="text-decoration:none;color: white;"><h1 class="navbar-brand" style="text-decoration:none;color: white;">Celuaccel</h1></a>
+      </div>@if(session()->has('user'))
+      <span class="nav-link text-white">
+            ¡Bienvenido, {{ session('user.Nombre') }}!
+        </span>@endif
       <div class="ms-auto">
         <form method="POST" action="{{ route('logout') }}">
           @csrf
@@ -38,7 +44,7 @@
     <div class="container-sm d-flex justify-content-center mt-5">
         <div class="card">
             <div class="card-body" style="width: 1200px;">
-                <h3>Módulo Notificaciones 🔔</h3>
+                <h3>Módulo Notificaciones </h3>
                 <hr>
 
                 {{-- Mensaje de éxito (session('success')) --}}
@@ -64,7 +70,7 @@
                 {{-- Formulario de Búsqueda y Botón Nuevo --}}
                 <form action="{{ route('notificaciones.index') }}" method="GET">
                     <div class="text-end mb-3">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AgregarModal"><i class="fa-solid fa-bell-circle-plus"></i> Nueva Notificación</button>
+                        @if($rol == 1 or $rol == 3)<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AgregarModal" style="background-color:red;"><i class="fa-solid fa-bell-circle-plus"></i> Nueva Notificación</button>@endif
                     </div>
                     <div class="row g-2 align-items-center">
                         <div class="col-md-6">
@@ -75,9 +81,9 @@
                         </div>
 
                         <div class="col-md-6 text-end">
-                            <button type="submit" class="btn btn-info"><i class="fas fa-search-plus"></i> Buscar</button>
+                            <button type="submit" class="btn btn-info" style="background-color:red;"><i class="fas fa-search-plus"></i> Buscar</button>
                             <a href="{{ route('notificaciones.index') }}">
-                                <button type="button" class="btn btn-warning"><i class="fas fa-list"></i> Reset</button>
+                                <button type="button" class="btn btn-warning" style="background-color:black;color:white;"><i class="fas fa-list"></i> Reset</button>
                             </a>
                         </div>
                     </div>
@@ -91,7 +97,7 @@
                                 <tr>
                                     <th scope="col">Código Notificación</th>
                                     <th scope="col">Tipo de Notificación</th>
-                                    <th>Acciones</th>
+                                    @if($rol == 1 or $rol == 3)<th>Acciones</th>@endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,10 +105,11 @@
                                     <tr>
                                         <td>{{$item->Codigo_Notificaciones}}</td>
                                         <td>{{$item->Tipo_Notificacion}}</td>
-                                        <td>
+                                        @if($rol == 1 or $rol == 3)<td>
                                             {{-- Botón Editar (Modal) --}}
                                             <button
                                                 type="button"
+                                                style="background-color:red;"
                                                 class="btn btn-success edit-btn btn-sm"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#EditarModal"
@@ -116,11 +123,11 @@
                                             <form action="{{ route('notificaciones.destroy', $item->Codigo_Notificaciones) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar el tipo de notificación: {{ $item->Tipo_Notificacion }}?')">
+                                                <button type="submit" style="background-color:black;color:white;" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar el tipo de notificación: {{ $item->Tipo_Notificacion }}?')">
                                                     <i class="fa-solid fa-trash"></i> Eliminar
                                                 </button>
                                             </form>
-                                        </td>
+                                        </td>@endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -260,7 +267,6 @@
 </body>
 </html>
 
-
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="background-color:#1c1c1cff">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" style="color:white;" id="offcanvasExampleLabel">Menú</h5>
@@ -272,12 +278,18 @@
         <div class="container mt-5">
 <div class="sidebar">
         <div class="p-3">
-            <h5 class="text-white mb-3">Módulos DB</h5>
+            @if(!session()->has('user'))
+            <h5 class="text-white mb-3">Inicia Sesion Para Navegar por el Sistema</h5>
             <div class="accordion accordion-flush" id="dbAccordion">
+            @endif
+            @if(session()->has('user'))
+            <h5 class="text-white mb-3">Modulos</h5>
+            <div class="accordion accordion-flush" id="dbAccordion">
+
 @php
 $rol = session('user.Codigo_Rol');
 @endphp
-@if($rol == 2 or 3)
+@if($rol == 2 or $rol == 3)
                 {{-- MÓDULO 1: CATÁLOGO --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingOne">
@@ -288,13 +300,15 @@ $rol = session('user.Codigo_Rol');
                     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#dbAccordion">
                         <div class="list-group list-group-flush">
                             <a href="{{ route('producto.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-box me-2"></i> Productos</a>
+                            @if($rol == 3)
                             <a href="{{ route('categoria.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-tags me-2"></i> Categorías</a>
+                            @endif
                         </div>
                     </div>
                 </div>
 @endif
 
-@if($rol == 2 or 3)
+@if($rol == 2 or $rol == 3)
                 {{-- MÓDULO 2: INTERACCIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingTwo">
@@ -311,7 +325,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 1 or 3)
+@if($rol == 1 or $rol == 3)
                 {{-- MÓDULO 3: SERVICIOS --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingThree">
@@ -322,13 +336,13 @@ $rol = session('user.Codigo_Rol');
                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#dbAccordion">
                         <div class="list-group list-group-flush">
                             <a href="{{ route('servicio.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-tools me-2"></i> Servicios Activos</a>
+                            <a href="{{ route('adminservicio') }}" class="list-group-item list-group-item-action"><i class="fas fa-tools me-2"></i> Simulacion Servicios (Vista de Tecnicos)</a>
                             <a href="{{ route('historial.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-history me-2"></i> Historial</a>
                         </div>
                     </div>
                 </div>
 @endif
 
-@if($rol == 2 or 3)
                 {{-- MÓDULO 4: COMUNICACIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFour">
@@ -338,14 +352,14 @@ $rol = session('user.Codigo_Rol');
                     </h2>
                     <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#dbAccordion">
                         <div class="list-group list-group-flush">
-                            <a href="{{ route('chat.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Chat</a>
+                            @if($rol == 1 or $rol == 3)<a href="{{ route('chat.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Chat</a>@endif
                             <a href="{{ route('protochat') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Simulación Chat</a>
-                            <a href="{{ route('mensajes.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-paper-plane me-2"></i> Mensajes</a>
+                            @if($rol == 1 or $rol == 3)<a href="{{ route('mensajes.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-paper-plane me-2"></i> Mensajes</a>@endif
                             <a href="{{ route('notificaciones.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i> Notificaciones</a>
                         </div>
                     </div>
                 </div>
-@endif
+
 
 @if($rol == 3)
                 {{-- MÓDULO 5: GESTIÓN BASE (Usuarios y Roles) --}}
@@ -363,7 +377,21 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-@endif               
+@endif                
+                {{-- MÓDULO 6: Perfil--}}
+                <div class="accordion-item" style="background-color: #1c1c1cff;">
+                    <h2 class="accordion-header" id="headingFive">
+                        <button class="accordion-button collapsed module-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive" style="background-color: #1c1c1cff; color: white;">
+                            <i class="fas fa-users-cog me-2"></i> Usuario
+                        </button>
+                    </h2>
+                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#dbAccordion">
+                        <div class="list-group list-group-flush">
+                            <a href="{{ route('perfil') }}" class="list-group-item list-group-item-action"><i class="fas fa-user me-2"></i> Perfil</a>
+                        </div>
+                    </div>
+                </div>                          
+@endif
             </div>
         </div>
-</div> 
+</div>

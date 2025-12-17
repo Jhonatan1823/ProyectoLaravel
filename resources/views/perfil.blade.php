@@ -3,57 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Modulo Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-    <style>
-        /* Estilos del proto chat */
-        .chat-box {
-            width: 100%;
-            max-width: 500px;
-            height: 400px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            background-color: #f8f9fa;
-        }
-        .chat-messages {
-            flex: 1;
-            padding: 10px;
-            overflow-y: auto;
-        }
-        .chat-message {
-            margin-bottom: 10px;
-        }
-        .chat-message.user {
-            text-align: right;
-            color: #0d6efd;
-        }
-        .chat-message.bot {
-            text-align: left;
-            color: #198754;
-        }
-        .chat-input {
-            display: flex;
-            border-top: 1px solid #ccc;
-        }
-        .chat-input input {
-            flex: 1;
-            border: none;
-            padding: 10px;
-        }
-        .chat-input button {
-            border: none;
-            background-color: #0d6efd;
-            color: white;
-            padding: 10px 15px;
-        }
-    </style>
-</head>
-<body style="background-color: #ffffffff;">
+<body>
 
 <!--Barra de navegacion de arriba-->
 <nav class="navbar navbar-expand-lg" style="background-color: #d20000ff;">
@@ -67,11 +21,15 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a  href="{{ route('welcome') }}" style="text-decoration:none;color: white;"><h1 class="navbar-brand" style="text-decoration:none;color: white;">Celuaccel</h1></a>
-      </div>@if(session()->has('user'))
-      <span class="nav-link text-white">
-            ¡Bienvenido, {{ session('user.Nombre') }}!
-        </span>@endif
+      </div>
       <div class="ms-auto">
+    <div>
+    </div>
+    @if(session()->has('user'))
+    <span class="nav-link text-white">
+            ¡Bienvenido, {{ session('user.Nombre') }}!
+    </span>
+    @endif
         <form method="POST" action="{{ route('logout') }}">
           @csrf
           <button type="submit" class="btn btn-light" style="color:red">
@@ -83,46 +41,81 @@
   </div>
 </nav>
 
-<center>
-  <!-- Proto Chat -->
-  <div class="chat-box mt-4">
-      <div class="chat-messages" id="chatMessages">
-          <div class="chat-message bot">Hola 👋, ¿en qué puedo ayudarte?</div>
-      </div>
-      <div class="chat-input">
-          <input type="text" id="chatInput" placeholder="Escribe un mensaje...">
-          <button onclick="sendMessage()">Enviar</button>
-      </div>
-  </div>
-</center>
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header text-white" style="background-color:#d20000;">
+             <h5 class="mb-0"><i class="fa-solid fa-user-pen"></i> Editar Perfil</h5>
+        </div>
+        <div class="card-body">
+            <form id="perfilForm" action="{{ route('perfil.update') }}" method="POST">
+                @csrf
+                @method('PUT')
 
-<script>
-    function sendMessage() {
-        const input = document.getElementById('chatInput');
-        const messages = document.getElementById('chatMessages');
-        const text = input.value.trim();
 
-        if(text !== "") {
-            // Mensaje del usuario
-            const userMsg = document.createElement('div');
-            userMsg.classList.add('chat-message', 'user');
-            userMsg.textContent = text;
-            messages.appendChild(userMsg);
+                <div class="mb-3">
+                    <label for="perfilID_Usuario" class="form-label">ID Usuario</label>
+                    <input type="text" class="form-control" id="perfilID_Usuario" value="{{ $usuario->ID_Usuario }}" readonly>
+                </div>
 
-            // Respuesta simulada del bot
-            const botMsg = document.createElement('div');
-            botMsg.classList.add('chat-message', 'bot');
-            botMsg.textContent = "Recibí tu mensaje: " + text;
-            messages.appendChild(botMsg);
 
-            // Scroll automático
-            messages.scrollTop = messages.scrollHeight;
+                <div class="mb-3">
+                    <label for="perfilCodigo_Documento" class="form-label">Tipo Documento</label>
+                    <select class="form-select" id="perfilCodigo_Documento" name="Codigo_Documento" required>
+                        <option value="2" {{ old('Codigo_Documento', $usuario->Codigo_Documento) == 2 ? 'selected' : '' }}>Cédula de Ciudadanía</option>
+                        <option value="1" {{ old('Codigo_Documento', $usuario->Codigo_Documento) == 1 ? 'selected' : '' }}>Tarjeta de Identidad</option>
+                        <option value="3" {{ old('Codigo_Documento', $usuario->Codigo_Documento) == 3 ? 'selected' : '' }}>Pasaporte</option>
+                        <option value="4" {{ old('Codigo_Documento', $usuario->Codigo_Documento) == 4 ? 'selected' : '' }}>NIT</option>
+                        <option value="5" {{ old('Codigo_Documento', $usuario->Codigo_Documento) == 5 ? 'selected' : '' }}>PEP</option>
+                    </select>
+                </div>
 
-            // Limpiar input
-            input.value = "";
-        }
-    }
-</script>
+
+                <div class="mb-3">
+                    <label for="perfilNombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="perfilNombre" name="Nombre" value="{{ old('Nombre', $usuario->Nombre) }}" required>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="perfilFecha_Nacimiento" class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" id="perfilFecha_Nacimiento" name="Fecha_Nacimiento" value="{{ old('Fecha_Nacimiento', $usuario->Fecha_Nacimiento) }}" required>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="perfilDireccion" class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="perfilDireccion" name="Direccion" value="{{ old('Direccion', $usuario->Direccion) }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="perfilTelefono" class="form-label">Teléfono</label>
+                    <input type="number" class="form-control" id="perfilTelefono" name="Telefono" value="{{ old('Telefono', $usuario->Telefono) }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="perfilCorreo" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="perfilCorreo" name="Correo" value="{{ old('Correo', $usuario->Correo) }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="perfilContraseña" class="form-label">Nueva Contraseña</label>
+                    <input type="password" class="form-control" id="perfilContraseña" name="Contraseña">
+                </div>
+                <div class="mb-3">
+                    <label for="perfilContraseña_confirmation" class="form-label">Confirmar Contraseña</label>
+                    <input type="password" class="form-control" id="perfilContraseña_confirmation" name="Contraseña_confirmation">
+                </div>
+
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary" style="background-color:#d20000;">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

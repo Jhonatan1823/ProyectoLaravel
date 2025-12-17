@@ -356,7 +356,10 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a  href="{{ route('welcome') }}" style="text-decoration:none"><h1 class="navbar-brand" style="color: white;">Celuaccel</h1></a>
-      </div>            
+      </div> @if(session()->has('user'))       
+      <span class="nav-link text-white">
+            ¡Bienvenido, {{ session('user.Nombre') }}!
+        </span>@endif    
       <a href="#inicio" class="nav-link">Inicio</a>
             <a href="#servicios" class="nav-link">Servicios</a>
             <a href="#caracteristicas" class="nav-link">Características</a>
@@ -370,7 +373,7 @@
 @if(session()->has('user'))
     <form method="POST" action="{{ route('logout') }}">
         @csrf
-        <button type="submit" class="btn btn-danger">
+        <button style="background-color: white; color: red; type="submit" class="btn btn-danger">
             <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
         </button>
     </form>
@@ -380,7 +383,7 @@
   </>
 </nav>
 
-    <!-- Hero Section -->
+    <!-- Parte del Inicio -->
     <section class="hero" id="inicio">
         <h1>Reparación de Celulares Profesional</h1>
         <p>Tu dispositivo en las mejores manos. Servicio técnico especializado, repuestos originales y garantía en todos nuestros trabajos. ¡Recupera tu celular en tiempo récord!</p>
@@ -390,7 +393,7 @@
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Parte de Atributos -->
     <section class="features" id="caracteristicas">
         <h2 class="section-title">¿Por qué elegir Celuaccel?</h2>
         <div class="features-grid">
@@ -417,7 +420,7 @@
         </div>
     </section>
 
-    <!-- Services Section -->
+    <!-- Tipos de Servicios -->
     <section class="services" id="servicios">
         <h2 class="section-title">Nuestros Servicios</h2>
         <div class="services-grid">
@@ -452,14 +455,16 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- Recordatorio de Inicio de Sesion -->
+    @if(!session()->has('user'))
     <section class="cta">
         <h2>¿Listo para reparar tu dispositivo?</h2>
         <p>Accede a nuestro sistema de gestión para solicitar servicios, hacer seguimiento a tus reparaciones y comunicarte con nuestros técnicos.</p>
         <a href="{{ route('iniciosesion') }}" class="btn-primary" style="background: white; color: #d20000;">Acceder al Sistema</a>
     </section>
+    @endif
 
-    <!-- Footer -->
+    <!-- Pie de Pagina -->
     <footer class="footer" id="contacto">
         <div class="footer-content">
             <div class="footer-section">
@@ -491,7 +496,7 @@
     </footer>
 
     <script>
-        // Smooth scrolling para enlaces internos
+        // Codigo que navega por la pagina con los botones de arriba
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -507,8 +512,6 @@
                 }
             });
         });
-
-        // Navbar efecto scroll
         window.addEventListener('scroll', function() {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 100) {
@@ -543,7 +546,7 @@
 @php
 $rol = session('user.Codigo_Rol');
 @endphp
-@if($rol == 2 or 3)
+@if($rol == 2 or $rol == 3)
                 {{-- MÓDULO 1: CATÁLOGO --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingOne">
@@ -554,13 +557,15 @@ $rol = session('user.Codigo_Rol');
                     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#dbAccordion">
                         <div class="list-group list-group-flush">
                             <a href="{{ route('producto.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-box me-2"></i> Productos</a>
+                            @if($rol == 3)
                             <a href="{{ route('categoria.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-tags me-2"></i> Categorías</a>
+                            @endif
                         </div>
                     </div>
                 </div>
 @endif
 
-@if($rol == 2 or 3)
+@if($rol == 2 or $rol == 3)
                 {{-- MÓDULO 2: INTERACCIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingTwo">
@@ -577,7 +582,7 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 1 or 3)
+@if($rol == 1 or $rol == 3)
                 {{-- MÓDULO 3: SERVICIOS --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingThree">
@@ -595,7 +600,6 @@ $rol = session('user.Codigo_Rol');
                 </div>
 @endif
 
-@if($rol == 2 or 3)
                 {{-- MÓDULO 4: COMUNICACIÓN --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFour">
@@ -605,16 +609,16 @@ $rol = session('user.Codigo_Rol');
                     </h2>
                     <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#dbAccordion">
                         <div class="list-group list-group-flush">
-                            <a href="{{ route('chat.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Chat</a>
+                            @if($rol == 1 or $rol == 3)<a href="{{ route('chat.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Chat</a>@endif
                             <a href="{{ route('protochat') }}" class="list-group-item list-group-item-action"><i class="fas fa-comments-dollar me-2"></i> Simulación Chat</a>
-                            <a href="{{ route('mensajes.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-paper-plane me-2"></i> Mensajes</a>
+                            @if($rol == 1 or $rol == 3)<a href="{{ route('mensajes.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-paper-plane me-2"></i> Mensajes</a>@endif
                             <a href="{{ route('notificaciones.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i> Notificaciones</a>
                         </div>
                     </div>
                 </div>
-@endif
 
-@if($rol == 3 or 3)
+
+@if($rol == 3)
                 {{-- MÓDULO 5: GESTIÓN BASE (Usuarios y Roles) --}}
                 <div class="accordion-item" style="background-color: #1c1c1cff;">
                     <h2 class="accordion-header" id="headingFive">
@@ -630,7 +634,21 @@ $rol = session('user.Codigo_Rol');
                         </div>
                     </div>
                 </div>
-@endif                           
+@endif                
+                {{-- MÓDULO 6: Perfil--}}
+                <div class="accordion-item" style="background-color: #1c1c1cff;">
+                    <h2 class="accordion-header" id="headingFive">
+                        <button class="accordion-button collapsed module-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive" style="background-color: #1c1c1cff; color: white;">
+                            <i class="fas fa-users-cog me-2"></i> Usuario
+                        </button>
+                    </h2>
+                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#dbAccordion">
+                        <div class="list-group list-group-flush">
+                            <a href="{{ route('perfil') }}" class="list-group-item list-group-item-action"><i class="fas fa-user me-2"></i> Perfil</a>
+                        </div>
+                    </div>
+                </div>               
+           
 @endif
             </div>
         </div>

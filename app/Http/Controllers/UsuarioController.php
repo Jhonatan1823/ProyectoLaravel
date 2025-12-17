@@ -34,7 +34,7 @@ class UsuarioController extends Controller
             'Nombre' => 'required',
             'Fecha_Nacimiento' => 'required',
             'Direccion' => 'required',
-            'Telefono' => 'required|numeric',
+            'Telefono' => 'required|max 200',
             'Correo' => 'required|email',
             'Contraseña' => 'required|max:200',
             'Codigo_Rol' => 'required|numeric'
@@ -67,7 +67,7 @@ class UsuarioController extends Controller
             'Nombre' => 'required',
             'Fecha_Nacimiento' => 'required',
             'Direccion' => 'required',
-            'Telefono' => 'required|numeric|max:20',
+            'Telefono' => 'required|max:200',
             'Correo' => 'required|email',
             'Contraseña' => 'required|max:200',
             'Codigo_Rol' => 'required|numeric'

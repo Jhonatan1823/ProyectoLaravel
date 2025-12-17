@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\ProductoModelo;
+use App\Models\CategoriaModelo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -11,7 +12,11 @@ class ProductoController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $query = DB::table('producto');
+        $query = DB::table('producto')
+                // 2. Únete a la tabla 'categoria' usando la clave foránea 'ID_Categoria'
+                ->join('categoria', 'producto.ID_Categoria', '=', 'categoria.ID_Categoria')
+                // 3. Selecciona todas las columnas del producto y agrega el nombre de la categoría
+                ->select('producto.*', 'categoria.Nombre_Categoria');
 
         if($search){
             $query->where(function($q) use ($search){
@@ -22,7 +27,7 @@ class ProductoController extends Controller
         });
         }
         $datos = $query->paginate(10);
-        return view("producto")->with("datos", $datos);
+        return view("producto", compact("datos"));
     }
 
     //Insertar Datos
